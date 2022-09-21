@@ -72,7 +72,7 @@ Resources:
                 Action:
                   - greengrass:CreateDeployment
                 Resource:
-                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:deployments:/*
+                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:deployments
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
