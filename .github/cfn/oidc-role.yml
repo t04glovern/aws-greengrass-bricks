@@ -62,7 +62,17 @@ Resources:
                 Action:
                   - greengrass:CreateComponentVersion
                   - greengrass:ListComponentVersions
-                Resource: '*'
+                Resource:
+                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:components:com.devopstar.Robocat
+        - PolicyName: greengrass-deployment
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - greengrass:CreateDeployment
+                Resource:
+                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:deployments:/*
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
