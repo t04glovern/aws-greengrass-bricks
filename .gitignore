@@ -1,0 +1,7 @@
+# Dynamic files
+device-policy.json
+deployment.json
+
+# Greengrass Development Kit
+greengrass-build/
+zip-build/
