@@ -33,9 +33,27 @@ Resources:
                   - iot:CancelJob
                 Resource:
                   - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:job/*
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AWSGreengrassFullAccess
-        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - PolicyName: s3-greengrass-components
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:CreateBucket
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}
+                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/*
+        - PolicyName: greengrass-components
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - greengrass:CreateComponentVersion
+                  - greengrass:ListComponentVersions
+                Resource: '*'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
