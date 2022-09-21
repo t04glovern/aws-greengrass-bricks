@@ -33,7 +33,7 @@ Resources:
                   - iot:CancelJob
                 Resource:
                   - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:job/*
-        - PolicyName: s3-greengrass-components
+        - PolicyName: s3-greengrass-bucket
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -42,10 +42,18 @@ Resources:
                   - s3:CreateBucket
                   - s3:GetBucketLocation
                   - s3:ListBucket
-                  - s3:PutObject
                 Resource:
                   - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}
-                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/*
+        - PolicyName: s3-greengrass-components
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/com.devopstar.Robocat/*
         - PolicyName: greengrass-components
           PolicyDocument:
             Version: '2012-10-17'
