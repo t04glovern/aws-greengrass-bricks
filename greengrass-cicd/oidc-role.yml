@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'GitHub OIDC: t04glovern/aws-greengrass-bricks | Stack: oidc-t04glovern-aws-greengrass-bricks'
+
+Parameters:
+  FullRepoName:
+    Type: String
+    Default: t04glovern/aws-greengrass-bricks
+
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: oidc-t04glovern-aws-greengrass-bricks
+      Policies:
+        - PolicyName: iot-thing-group
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iot:DescribeThingGroup
+                  - iot:CreateJob
+                Resource:
+                  - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:thinggroup/robocat
+        - PolicyName: iot-jobs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iot:DescribeJob
+                  - iot:CreateJob
+                  - iot:CancelJob
+                Resource:
+                  - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:job/*
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSGreengrassFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Sub arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${FullRepoName}:*
+
+Outputs:
+  OidcRoleAwsAccountId:
+    Value: !Ref AWS::AccountId
+  OidcRoleAwsRegion:
+    Value: !Ref AWS::Region
+  OidcRoleAwsRoleToAssume:
+    Value: !GetAtt Role.Arn

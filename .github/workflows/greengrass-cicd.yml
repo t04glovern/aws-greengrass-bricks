@@ -1,0 +1,88 @@
+name: Greengrass Component Deploy
+
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  GREENGRASS_COMPONENT_NAME: com.devopstar.Robocat
+  GREENGRASS_REGION: ap-southeast-2
+  working-directory: ./greengrass-cicd
+
+jobs:
+  publish:
+    name: Component publish
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      publised_version: ${{ steps.gdk_version.outputs.version }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.OIDC_ROLE_AWS_ROLE_TO_ASSUME }}
+        aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
+
+    - name: Install Greengrass Development Kit
+      run: pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.1.0
+
+    - name: GDK Build
+      run: gdk component build
+      working-directory: ${{ env.working-directory }}
+
+    - name: GDK Publish
+      run: gdk component publish
+      working-directory: ${{ env.working-directory }}
+
+    - name: Get published version
+      id: gdk_version
+      run: |
+        export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+        export AWS_REGION=${GREENGRASS_REGION}
+        export LATEST_COMPONENT_VERSION=$(aws greengrassv2 list-component-versions \
+          --output text \
+          --no-paginate \
+          --arn arn:aws:greengrass:${AWS_REGION}:${AWS_ACCOUNT_ID}:components:${GREENGRASS_COMPONENT_NAME} \
+          --query 'componentVersions[0].componentVersion')
+        
+        echo "::set-output name=version::${LATEST_COMPONENT_VERSION}"
+  deploy:
+    name: Component deploy
+    runs-on: ubuntu-latest
+    needs: publish
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.OIDC_ROLE_AWS_ROLE_TO_ASSUME }}
+        aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
+
+    - name: Deploy Greengrass component
+      run: |
+        export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+        export AWS_REGION=${GREENGRASS_REGION}
+        envsubst < "deployment.json.template" > "deployment.json"
+        aws greengrassv2 create-deployment \
+          --cli-input-json file://deployment.json \
+          --region ${AWS_REGION}
+      env:
+        LATEST_COMPONENT_VERSION: ${{needs.publish.outputs.publised_version}}
+      working-directory: ${{ env.working-directory }}
