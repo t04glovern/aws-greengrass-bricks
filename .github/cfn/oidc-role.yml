@@ -5,6 +5,12 @@ Parameters:
   FullRepoName:
     Type: String
     Default: t04glovern/aws-greengrass-bricks
+  GreengrassThingGroupName:
+    Type: String
+    Default: robocat
+  GreengrassComponentName:
+    Type: String
+    Default: com.devopstar.Robocat
 
 Resources:
   Role:
@@ -21,7 +27,7 @@ Resources:
                   - iot:DescribeThingGroup
                   - iot:CreateJob
                 Resource:
-                  - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:thinggroup/robocat
+                  - !Sub arn:aws:iot:${AWS::Region}:${AWS::AccountId}:thinggroup/${GreengrassThingGroupName}
         - PolicyName: iot-jobs
           PolicyDocument:
             Version: '2012-10-17'
@@ -53,7 +59,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                 Resource:
-                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/com.devopstar.Robocat/*
+                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/${GreengrassComponentName}/*
         - PolicyName: greengrass-components
           PolicyDocument:
             Version: '2012-10-17'
@@ -63,7 +69,7 @@ Resources:
                   - greengrass:CreateComponentVersion
                   - greengrass:ListComponentVersions
                 Resource:
-                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:components:com.devopstar.Robocat
+                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:components:${GreengrassComponentName}
         - PolicyName: greengrass-deployment
           PolicyDocument:
             Version: '2012-10-17'
