@@ -1,25 +1,25 @@
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:GetObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::greengrass-component-artifacts-$AWS_REGION-$AWS_ACCOUNT_ID/*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ecr:GetAuthorizationToken",
-                "ecr:BatchGetImage",
-                "ecr:GetDownloadUrlForLayer"
-            ],
-            "Resource": [
-                "*"
-            ]
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::greengrass-component-artifacts-$AWS_REGION-$AWS_ACCOUNT_ID/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
 }

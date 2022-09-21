@@ -1,111 +1,112 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Creates a user that can provision Greengrass devices - Limiting to an IP Address"
+Description: Creates a user that can provision Greengrass devices - Limiting to an IP Address
 
 Parameters:
-    IpAddress:
-        Type: String
-        Description: 'IP Address to allow access to role from.'
+  IpAddress:
+    Type: String
+    Description: IP Address to allow access to role from
 
 Resources:
-    IAMUser:
-        Type: "AWS::IAM::User"
-        Properties:
-            Path: "/"
-            UserName: "greengrass-provisioner"
-            ManagedPolicyArns:
-              - !Ref IAMManagedPolicy
+  IAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      Path: /
+      UserName: greengrass-provisioner
+      ManagedPolicyArns:
+        - !Ref IAMManagedPolicy
 
-    IAMManagedPolicy:
-        Type: "AWS::IAM::ManagedPolicy"
-        Properties:
-            ManagedPolicyName: "greengrass-provisioner-policy"
-            Path: "/"
-            PolicyDocument: !Sub |
-                {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Sid": "CreateTokenExchangeRole",
-                            "Effect": "Allow",
-                            "Action": [
-                                "iam:AttachRolePolicy",
-                                "iam:CreatePolicy",
-                                "iam:CreateRole",
-                                "iam:GetPolicy",
-                                "iam:GetRole",
-                                "iam:PassRole"
-                            ],
-                            "Resource": [
-                                "arn:aws:iam::${AWS::AccountId}:role/GreengrassV2TokenExchangeRole",
-                                "arn:aws:iam::${AWS::AccountId}:policy/GreengrassV2TokenExchangeRoleAccess"
-                            ],
-                            "Condition": {
-                                "IpAddress": {
-                                    "aws:SourceIp": "${IpAddress}/32"
-                                },
-                                "Bool": {"aws:ViaAWSService": "false"}
-                            }
-                        },
-                        {
-                            "Sid": "CreateIoTResources",
-                            "Effect": "Allow",
-                            "Action": [
-                                "iot:AddThingToThingGroup",
-                                "iot:AttachPolicy",
-                                "iot:AttachThingPrincipal",
-                                "iot:CreateKeysAndCertificate",
-                                "iot:CreatePolicy",
-                                "iot:CreateRoleAlias",
-                                "iot:CreateThing",
-                                "iot:CreateThingGroup",
-                                "iot:DescribeEndpoint",
-                                "iot:DescribeRoleAlias",
-                                "iot:DescribeThingGroup",
-                                "iot:GetPolicy"
-                            ],
-                            "Resource": "*",
-                            "Condition": {
-                                "IpAddress": {
-                                    "aws:SourceIp": "${IpAddress}/32"
-                                },
-                                "Bool": {"aws:ViaAWSService": "false"}
-                            }
-                        },
-                        {
-                            "Sid": "DeployDevTools",
-                            "Effect": "Allow",
-                            "Action": [
-                                "greengrass:CreateDeployment",
-                                "iot:CancelJob",
-                                "iot:CreateJob",
-                                "iot:DeleteThingShadow",
-                                "iot:DescribeJob",
-                                "iot:DescribeThing",
-                                "iot:DescribeThingGroup",
-                                "iot:GetThingShadow",
-                                "iot:UpdateJob",
-                                "iot:UpdateThingShadow"
-                            ],
-                            "Resource": "*",
-                            "Condition": {
-                                "IpAddress": {
-                                    "aws:SourceIp": "${IpAddress}/32"
-                                },
-                                "Bool": {"aws:ViaAWSService": "false"}
-                            }
-                        }
-                    ]
-                }
-    IAMAccessKey:
-        Type: "AWS::IAM::AccessKey"
-        Properties:
-            Status: "Active"
-            UserName: !Ref IAMUser
+  IAMManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: greengrass-provisioner-policy
+      Path: /
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "CreateTokenExchangeRole",
+              "Effect": "Allow",
+              "Action": [
+                "iam:AttachRolePolicy",
+                "iam:CreatePolicy",
+                "iam:CreateRole",
+                "iam:GetPolicy",
+                "iam:GetRole",
+                "iam:PassRole"
+              ],
+              "Resource": [
+                "arn:aws:iam::${AWS::AccountId}:role/GreengrassV2TokenExchangeRole",
+                "arn:aws:iam::${AWS::AccountId}:policy/GreengrassV2TokenExchangeRoleAccess"
+              ],
+              "Condition": {
+                "IpAddress": {
+                  "aws:SourceIp": "${IpAddress}/32"
+                },
+                "Bool": {"aws:ViaAWSService": "false"}
+              }
+            },
+            {
+              "Sid": "CreateIoTResources",
+              "Effect": "Allow",
+              "Action": [
+                "iot:AddThingToThingGroup",
+                "iot:AttachPolicy",
+                "iot:AttachThingPrincipal",
+                "iot:CreateKeysAndCertificate",
+                "iot:CreatePolicy",
+                "iot:CreateRoleAlias",
+                "iot:CreateThing",
+                "iot:CreateThingGroup",
+                "iot:DescribeEndpoint",
+                "iot:DescribeRoleAlias",
+                "iot:DescribeThingGroup",
+                "iot:GetPolicy"
+              ],
+              "Resource": "*",
+              "Condition": {
+                "IpAddress": {
+                  "aws:SourceIp": "${IpAddress}/32"
+                },
+                "Bool": {"aws:ViaAWSService": "false"}
+              }
+            },
+            {
+              "Sid": "DeployDevTools",
+              "Effect": "Allow",
+              "Action": [
+                "greengrass:CreateDeployment",
+                "iot:CancelJob",
+                "iot:CreateJob",
+                "iot:DeleteThingShadow",
+                "iot:DescribeJob",
+                "iot:DescribeThing",
+                "iot:DescribeThingGroup",
+                "iot:GetThingShadow",
+                "iot:UpdateJob",
+                "iot:UpdateThingShadow"
+              ],
+              "Resource": "*",
+              "Condition": {
+                "IpAddress": {
+                  "aws:SourceIp": "${IpAddress}/32"
+                },
+                "Bool": {"aws:ViaAWSService": "false"}
+              }
+            }
+          ]
+        }
+
+  IAMAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Status: Active
+      UserName: !Ref IAMUser
 
 Outputs:
-    AccessKeyId:
-        Description: "Greengrass Provisioner - Access Key"
-        Value: !Ref IAMAccessKey
-    AccessKeySecret:
-        Description: "Greengrass Provisioner - Secret Key"
-        Value: !GetAtt IAMAccessKey.SecretAccessKey
+  AccessKeyId:
+    Description: Greengrass Provisioner - Access Key
+    Value: !Ref IAMAccessKey
+  AccessKeySecret:
+    Description: Greengrass Provisioner - Secret Key
+    Value: !GetAtt IAMAccessKey.SecretAccessKey
