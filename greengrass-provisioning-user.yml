@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Creates a user that can provision Greengrass devices - Limiting to an IP Address
+Description: Creates a user that can provision Greengrass devices - Limiting to an IP Address - Based on https://docs.aws.amazon.com/greengrass/v2/developerguide/provision-minimal-iam-policy.html
 
 Parameters:
   IpAddress:

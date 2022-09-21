@@ -4,8 +4,8 @@ This repository contains a set of good pratices and examples when working with A
 
 ## Contents
 
-* [01 - Basic Setup](#basic-setup) - This step is mandatory for ALL other tutorials in this repository
-* [02 - Greengrass V2 CICD with Github Actions](./greengrass-cicd)
+* [01 - Setting up an AWS IoT Greengrass v2 Learning environment](#basic-setup) - **This step is mandatory** for ALL other tutorials in this repository
+* [02 - Using Github Actions for AWS IoT Greengrass v2 Continuous Deployment](./greengrass-cicd)
 
 ## Basic Setup
 
@@ -20,16 +20,20 @@ export AWS_REGION="ap-southeast-2"
 export GREENGRASS_THING_GROUP="robocat"
 export GREENGRASS_THING_NAME="robocat-01"
 
+# For more: https://docs.aws.amazon.com/greengrass/v2/developerguide/getting-started.html#install-greengrass-v2
 sudo -E java \
   -Droot="/greengrass/v2" \
-  -Dlog.store=FILE -jar \
-  ./GreengrassCore/lib/Greengrass.jar \
+  -Dlog.store=FILE -jar ./GreengrassCore/lib/Greengrass.jar \
   --aws-region ${AWS_REGION} \
   --thing-name ${GREENGRASS_THING_NAME} \
   --thing-group-name ${GREENGRASS_THING_GROUP} \
+  --thing-policy-name GreengrassV2IoTThingPolicy \
+  --tes-role-name GreengrassV2TokenExchangeRole \
+  --tes-role-alias-name GreengrassCoreTokenExchangeRoleAlias \
   --component-default-user ggc_user:ggc_group \
   --provision true \
-  --setup-system-service true
+  --setup-system-service true \
+  --deploy-dev-tools true
 ```
 
 The following commands don't have to be run on the device, however you should run them from the root directory of this repository
@@ -45,9 +49,7 @@ aws iam create-policy \
     --policy-document file://device-policy.json \
     --region ${AWS_REGION}
 
-## !!!!
 # [SKIP] Only run if you need to update the policy
-## !!!!
 aws iam create-policy-version \
     --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/GreengrassV2ComponentArtifactPolicy \
     --policy-document file://device-policy.json \
