@@ -1,11 +1,11 @@
 # AWS IoT Greengrass Bricks (v2)
 
-This repository contains a set of good pratices and examples when working with AWS IoT Greengrass (v2). It is built ontop of some work i've done previously in this space for [Greengrass (v1) called aws-greener-grass](https://github.com/t04glovern/aws-greener-grass)
+This repository contains a set of good practices and examples when working with AWS IoT Greengrass (v2). It is built on top of some work I've done previously in this space for [Greengrass (v1) called aws-greener-grass](https://github.com/t04glovern/aws-greener-grass)
 
 ## Contents
 
-* [01 - Setting up an AWS IoT Greengrass v2 Learning environment](#basic-setup) - **This step is mandatory** for ALL other tutorials in this repository
-* [02 - Using Github Actions for AWS IoT Greengrass v2 Continuous Deployment](./greengrass-cicd)
+* [01 - Setting up an AWS IoT Greengrass v2 Learning environment](https://devopstar.com/2022/09/21/aws-iot-greengrass-v2-learning-environment) - **This step is mandatory** for ALL other tutorials in this repository
+* [02 - Using Github Actions for AWS IoT Greengrass v2 Continuous Deployment](https://devopstar.com/2022/09/22/github-actions-for-aws-iot-greengrass-v2-continuous-deployment)
 
 ## Basic Setup
 
@@ -36,7 +36,7 @@ sudo -E java \
   --deploy-dev-tools true
 ```
 
-The following commands don't have to be run on the device, however you should run them from the root directory of this repository
+The following commands don't have to be run on the device, however, you should run them from the root directory of this repository
 
 ```bash
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
