@@ -7,7 +7,7 @@
             "runWith": {}
         },
         "aws.greengrass.Nucleus": {
-            "componentVersion": "2.8.1"
+            "componentVersion": "2.7.0"
         },
         "aws.greengrass.clientdevices.mqtt.Bridge": {
             "componentVersion": "2.2.2",

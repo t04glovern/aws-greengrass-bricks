@@ -27,7 +27,6 @@ Manifests:
   Lifecycle:
     Install:
       RequiresPrivilege: false
-      Timeout: 600
       Script: |-
         pip3 install -r {artifacts:decompressedPath}/greengrass-cicd/requirements.txt
     Run:
