@@ -7,11 +7,11 @@ ComponentPublisher: "{COMPONENT_AUTHOR}"
 ComponentConfiguration:
   DefaultConfiguration:
     accessControl:
-      aws.greengrass.ipc.pubsub:
-        com.devopstar.Robocat:pubsub:1:
+      aws.greengrass.ipc.mqttproxy:
+        com.devopstar.Robocat:mqttproxy:1:
           policyDescription: Allows access to subscribe to devopstar/robocat/pet topic
           operations:
-            - aws.greengrass#SubscribeToTopic
+            - aws.greengrass#SubscribeToIoTCore
           resources:
             - devopstar/robocat/pet
 Manifests:
