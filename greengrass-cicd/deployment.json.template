@@ -18,13 +18,13 @@
         }
     },
     "deploymentPolicies": {
-        "failureHandlingPolicy": "ROLLBACK",
+        "failureHandlingPolicy": "DO_NOTHING",
         "componentUpdatePolicy": {
-            "timeoutInSeconds": 60,
+            "timeoutInSeconds": 120,
             "action": "NOTIFY_COMPONENTS"
         },
         "configurationValidationPolicy": {
-            "timeoutInSeconds": 60
+            "timeoutInSeconds": 120
         }
     },
     "iotJobConfiguration": {}
