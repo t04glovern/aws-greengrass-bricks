@@ -19,12 +19,12 @@ Manifests:
   Platform:
     os: linux
   Artifacts:
-    - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/com.devopstar.RobocatContainer.zip"
+    - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/container.zip"
       Unarchive: ZIP
   Lifecycle:
     Install:
       RequiresPrivilege: true
-      Script: docker load -i {artifacts:decompressedPath}/com.devopstar.RobocatContainer/custom-build/com.devopstar.RobocatContainer/container.tar
+      Script: docker load -i {artifacts:decompressedPath}/custom-build/container.tar
     Run:
       RequiresPrivilege: true
       Script: |-

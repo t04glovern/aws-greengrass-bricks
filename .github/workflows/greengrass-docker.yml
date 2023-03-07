@@ -4,7 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - blog/greengrass-docker
+      - main
+    paths:
+      - greengrass-docker
+  pull_request:
     paths:
       - greengrass-docker
 
