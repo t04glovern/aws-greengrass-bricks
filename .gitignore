@@ -5,3 +5,4 @@ deployment.json
 # Greengrass Development Kit
 greengrass-build/
 zip-build/
+custom-build/

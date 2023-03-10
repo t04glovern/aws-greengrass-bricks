@@ -1,0 +1,23 @@
+{
+  "component": {
+    "com.devopstar.RobocatContainer": {
+      "author": "Nathan Glover",
+      "version": "NEXT_PATCH",
+      "build": {
+        "build_system": "custom",
+        "custom_build_command": [
+          "bash",
+          "build.sh",
+          "com.devopstar.RobocatContainer",
+          "NEXT_PATCH",
+          "robocatcontainer"
+        ]
+      },
+      "publish": {
+        "bucket": "greengrass-component-artifacts",
+        "region": "ap-southeast-2"
+      }
+    }
+  },
+  "gdk_version": "1.2.1"
+}

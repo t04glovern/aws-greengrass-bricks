@@ -1,4 +1,4 @@
-name: Greengrass Component Deploy - greengrass-cicd
+name: Greengrass Component Deploy - greengrass-docker
 
 on: 
   workflow_dispatch:
@@ -6,15 +6,15 @@ on:
     branches:
       - main
     paths:
-      - greengrass-cicd
+      - greengrass-docker
   pull_request:
     paths:
-      - greengrass-cicd
+      - greengrass-docker
 
 env:
-  GREENGRASS_COMPONENT_NAME: com.devopstar.Robocat
+  GREENGRASS_COMPONENT_NAME: com.devopstar.RobocatContainer
   GREENGRASS_REGION: ap-southeast-2
-  working-directory: ./greengrass-cicd
+  working-directory: ./greengrass-docker
 
 jobs:
   publish:
@@ -40,7 +40,7 @@ jobs:
         aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
 
     - name: Install Greengrass Development Kit
-      run: pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.1.0
+      run: pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.1
 
     - name: GDK Build
       run: gdk component build

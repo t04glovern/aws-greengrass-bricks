@@ -1,0 +1,45 @@
+---
+RecipeFormatVersion: "2020-01-25"
+ComponentName: com.devopstar.RobocatContainer
+ComponentVersion: NEXT_PATCH
+ComponentDescription: AWS IoT Greengrass component to pet your robocat fleet via subscription in a docker container
+ComponentPublisher: Nathan Glover
+ComponentConfiguration:
+  DefaultConfiguration:
+    accessControl:
+      aws.greengrass.ipc.mqttproxy:
+        com.devopstar.RobocatContainer:mqttproxy:1:
+          policyDescription: Allows access to publish to devopstar/robocat/{iot:thingName}/meow topic
+          operations:
+            - aws.greengrass#PublishToIoTCore
+          resources:
+            - devopstar/robocat/{iot:thingName}/meow
+Manifests:
+- Name: Linux
+  Platform:
+    os: linux
+  Artifacts:
+    - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/container.zip"
+      Unarchive: ZIP
+  Lifecycle:
+    Install:
+      RequiresPrivilege: true
+      Script: docker load -i {artifacts:decompressedPath}/custom-build/container.tar
+    Run:
+      RequiresPrivilege: true
+      Script: |-
+        docker run --rm \
+          --name robocatcontainer-zipped \
+          --network=host \
+          -e SVCUID \
+          -e AWS_REGION \
+          -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT \
+          -e AWS_IOT_THING_NAME \
+          -v {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket \
+          robocatcontainer-zipped
+    Shutdown:
+      RequiresPrivilege: true
+      Script: docker stop robocatcontainer-zipped
+    Recover:
+      RequiresPrivilege: true
+      Script: docker stop robocatcontainer-zipped
