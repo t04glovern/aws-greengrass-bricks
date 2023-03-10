@@ -9,11 +9,11 @@ ComponentConfiguration:
     accessControl:
       aws.greengrass.ipc.mqttproxy:
         com.devopstar.RobocatContainer:mqttproxy:1:
-          policyDescription: Allows access to subscribe to devopstar/robocat/pet topic
+          policyDescription: Allows access to publish to devopstar/robocat/{iot:thingName}/meow topic
           operations:
-            - aws.greengrass#SubscribeToIoTCore
+            - aws.greengrass#PublishToIoTCore
           resources:
-            - devopstar/robocat/pet
+            - devopstar/robocat/{iot:thingName}/meow
 Manifests:
 - Name: Linux
   Platform:
@@ -29,17 +29,17 @@ Manifests:
       RequiresPrivilege: true
       Script: |-
         docker run --rm \
-          --name robocatcontainer \
+          --name robocatcontainer-zipped \
           --network=host \
           -e SVCUID \
           -e AWS_REGION \
           -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT \
           -e AWS_IOT_THING_NAME \
           -v {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket \
-          robocatcontainer
+          robocatcontainer-zipped
     Shutdown:
       RequiresPrivilege: true
-      Script: docker stop robocatcontainer
+      Script: docker stop robocatcontainer-zipped
     Recover:
       RequiresPrivilege: true
-      Script: docker stop robocatcontainer
+      Script: docker stop robocatcontainer-zipped

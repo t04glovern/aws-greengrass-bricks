@@ -12,7 +12,7 @@
         "aws.greengrass.clientdevices.mqtt.Bridge": {
             "componentVersion": "2.2.4",
             "configurationUpdate": {
-                "merge": "{\"mqttTopicMapping\":{\"StatMapping\":{\"topic\":\"devopstar/robocat/pet\",\"source\":\"IotCore\",\"target\":\"Pubsub\"}}}"
+                "merge": "{\"mqttTopicMapping\":{\"StatMapping\":{\"topic\":\"devopstar/robocat/*/meow\",\"source\":\"IotCore\",\"target\":\"Pubsub\"}}}"
             },
             "runWith": {}
         }
