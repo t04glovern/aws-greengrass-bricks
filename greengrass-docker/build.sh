@@ -29,7 +29,7 @@ rm -rf ./custom-build
 mkdir ./custom-build
 
 # build Docker image
-docker buildx build --platform linux/amd64,linux/arm/v7 -t $CONTAINER_TAG .
+docker buildx build --platform linux/arm/v7 -t $CONTAINER_TAG .
 
 # save Docker images as tar
 docker save --output ./custom-build/container.tar $CONTAINER_TAG
