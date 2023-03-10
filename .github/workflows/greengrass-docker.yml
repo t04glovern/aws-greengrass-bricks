@@ -1,6 +1,6 @@
 name: Greengrass Component Deploy - greengrass-docker
 
-on: 
+on:
   workflow_dispatch:
   push:
     branches:
@@ -29,6 +29,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    - uses: docker/setup-buildx-action@v2
+      with:
+       platforms: linux/amd64,linux/arm/v7
+
     - uses: actions/setup-python@v3
       with:
         python-version: '3.9'
@@ -60,7 +65,7 @@ jobs:
           --no-paginate \
           --arn arn:aws:greengrass:${AWS_REGION}:${AWS_ACCOUNT_ID}:components:${GREENGRASS_COMPONENT_NAME} \
           --query 'componentVersions[0].componentVersion')
-        
+
         echo "::set-output name=version::${LATEST_COMPONENT_VERSION}"
   deploy:
     name: Component deploy

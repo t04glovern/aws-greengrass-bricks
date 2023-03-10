@@ -2,14 +2,14 @@
 # Documentation: https://docs.aws.amazon.com/greengrass/v2/developerguide/gdk-cli-configuration-file.html
 # Script based on: https://github.com/awslabs/aws-greengrass-labs-local-web-server/blob/main/build-custom.sh
 
-# These commands must create a recipe and artifacts in the following folders 
-# within the component folder. The GDK CLI creates these folders for you when 
+# These commands must create a recipe and artifacts in the following folders
+# within the component folder. The GDK CLI creates these folders for you when
 # you run the component build command.
 #
 # - Recipe folder: greengrass-build/recipes
 # - Artifacts folder: greengrass-build/artifacts/componentName/componentVersion
 #
-# Replace componentName with the component name, and replace componentVersion with 
+# Replace componentName with the component name, and replace componentVersion with
 # the component version or NEXT_PATCH.
 
 if [ $# -ne 3 ]; then
@@ -29,7 +29,7 @@ rm -rf ./custom-build
 mkdir ./custom-build
 
 # build Docker image
-docker buildx build --platform linux/arm/v7 -t $CONTAINER_TAG .
+docker buildx build --platform linux/amd64,linux/arm/v7 -t $CONTAINER_TAG .
 
 # save Docker images as tar
 docker save --output ./custom-build/container.tar $CONTAINER_TAG
