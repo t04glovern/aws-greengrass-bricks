@@ -24,7 +24,7 @@ Manifests:
   Lifecycle:
     Install:
       RequiresPrivilege: true
-      Script: docker load -i {artifacts:decompressedPath}/custom-build/container.tar
+      Script: docker load -i {artifacts:decompressedPath}/container.tar
     Run:
       RequiresPrivilege: true
       Script: |-

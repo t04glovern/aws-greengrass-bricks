@@ -28,15 +28,10 @@ cp recipe.yaml ./greengrass-build/recipes
 rm -rf ./custom-build
 mkdir ./custom-build
 
-# build Docker image
+# build & save Docker image
 docker buildx build \
   --platform linux/arm/v7 \
   --output "type=docker,push=false,name=$CONTAINER_TAG,dest=./custom-build/container.tar" .
-
-docker images
-
-# save Docker images as tar
-docker save --output ./custom-build/container.tar $CONTAINER_TAG
 
 # zip up archive
 zip -r -j -X ./custom-build/container.zip ./custom-build
