@@ -7,9 +7,11 @@ on:
       - main
     paths:
       - greengrass-docker
+      - .github/workflows/greengrass-docker.yml
   pull_request:
     paths:
       - greengrass-docker
+      - .github/workflows/greengrass-docker.yml
 
 env:
   GREENGRASS_COMPONENT_NAME: com.devopstar.RobocatContainer
