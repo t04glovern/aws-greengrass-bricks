@@ -29,25 +29,23 @@ if not hostname:
     logger.error("HOSTNAME is empty")
     raise ValueError("HOSTNAME is empty")
 
-# publish message
-topic = "devopstar/robocat/{}/meow".format(thing_name)
-message = "Meow! from {} running in {} container".format(
-    thing_name, hostname)
-qos = QOS.AT_LEAST_ONCE
-
-request = PublishToIoTCoreRequest()
-request.topic_name = topic
-request.payload = bytes(message, "utf-8")
-request.qos = qos
-
-# Keep the main thread alive, or the process will exit.
 while True:
-    time.sleep(10)
-    operation = ipc_client.new_publish_to_iot_core()
-    operation.activate(request)
-    future_response = operation.get_response()
+    time.sleep(30)
+
+    topic = "devopstar/robocat/{}/meow".format(thing_name)
+    message = "Meow! from {} running in {} container".format(thing_name, hostname)
+    qos = QOS.AT_LEAST_ONCE
+
+    request = PublishToIoTCoreRequest()
+    request.topic_name = topic
+    request.payload = bytes(message, "utf-8")
+    request.qos = qos
 
     try:
+        operation = ipc_client.new_publish_to_iot_core()
+        logger.info("Publishing message to topic {}: {}".format(topic, message))
+        operation.activate(request)
+        future_response = operation.get_response()
         future_response.result(TIMEOUT)
     except Exception as e:
         logger.error("Failed to publish message {}".format(e))
