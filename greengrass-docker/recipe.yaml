@@ -36,7 +36,7 @@ Manifests:
           -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT \
           -e AWS_IOT_THING_NAME \
           -v {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket \
-          robocatcontainer-zipped
+          robocatcontainer
     Shutdown:
       RequiresPrivilege: true
       Script: docker stop robocatcontainer-zipped
