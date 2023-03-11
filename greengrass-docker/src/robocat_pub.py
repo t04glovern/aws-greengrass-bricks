@@ -50,6 +50,4 @@ while True:
     try:
         future_response.result(TIMEOUT)
     except Exception as e:
-        logger.error("Failed to publish message")
-        logger.error(e)
-        raise e
+        logger.error("Failed to publish message {}".format(e))

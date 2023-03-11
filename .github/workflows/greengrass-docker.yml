@@ -6,11 +6,11 @@ on:
     branches:
       - main
     paths:
-      - greengrass-docker
+      - greengrass-docker/**
       - .github/workflows/greengrass-docker.yml
   pull_request:
     paths:
-      - greengrass-docker
+      - greengrass-docker/**
       - .github/workflows/greengrass-docker.yml
 
 env:
