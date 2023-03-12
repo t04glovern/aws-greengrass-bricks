@@ -4,11 +4,11 @@ ComponentName: com.devopstar.RobocatContainer
 ComponentVersion: NEXT_PATCH
 ComponentDescription: AWS IoT Greengrass component to pet your robocat fleet via subscription in a docker container
 ComponentPublisher: Nathan Glover
-ComponentDependencies:
-  aws.greengrass.DockerApplicationManager:
-    VersionRequirement: ~2.0.0
-  aws.greengrass.TokenExchangeService:
-    VersionRequirement: ~2.0.0
+# ComponentDependencies:
+#   aws.greengrass.DockerApplicationManager:
+#     VersionRequirement: ~2.0.0
+#   aws.greengrass.TokenExchangeService:
+#     VersionRequirement: ~2.0.0
 ComponentConfiguration:
   DefaultConfiguration:
     accessControl:
@@ -26,7 +26,7 @@ Manifests:
   Artifacts:
     - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/container.zip"
       Unarchive: ZIP
-    - URI: "docker:536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest"
+    # - URI: "docker:536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest"
   Lifecycle:
     Install:
       RequiresPrivilege: true
@@ -44,24 +44,24 @@ Manifests:
           -v {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket \
           robocatcontainer
 
-        docker run --rm \
-          --name robocatcontainer-ecr \
-          --network=host \
-          -e AWS_CONTAINER_AUTHORIZATION_TOKEN \
-          -e AWS_CONTAINER_CREDENTIALS_FULL_URI \
-          -e SVCUID \
-          -e AWS_REGION \
-          -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT \
-          -e AWS_IOT_THING_NAME \
-          -v {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket \
-          robocatcontainer
+        # docker run --rm \
+        #   --name robocatcontainer-ecr \
+        #   --network=host \
+        #   -e AWS_CONTAINER_AUTHORIZATION_TOKEN \
+        #   -e AWS_CONTAINER_CREDENTIALS_FULL_URI \
+        #   -e SVCUID \
+        #   -e AWS_REGION \
+        #   -e AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT \
+        #   -e AWS_IOT_THING_NAME \
+        #   -v {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket \
+        #   robocatcontainer
     Shutdown:
       RequiresPrivilege: true
       Script: |-
         docker stop robocatcontainer-zipped
-        docker stop robocatcontainer-ecr
+        # docker stop robocatcontainer-ecr
     Recover:
       RequiresPrivilege: true
       Script: |-
         docker stop robocatcontainer-zipped
-        docker stop robocatcontainer-ecr
+        # docker stop robocatcontainer-ecr
