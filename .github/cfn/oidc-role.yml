@@ -11,6 +11,9 @@ Parameters:
   GreengrassComponentName:
     Type: String
     Default: com.devopstar.Robocat
+  EcrRepositoryName:
+    Type: String
+    Default: robocatcontainer
 
 Resources:
   Role:
@@ -79,6 +82,28 @@ Resources:
                   - greengrass:CreateDeployment
                 Resource:
                   - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:deployments
+        - PolicyName: ecr-deployment
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:CompleteLayerUpload
+                  - ecr:CreateRepository
+                  - ecr:DescribeRepositories
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:InitiateLayerUpload
+                  - ecr:PutImage
+                  - ecr:UploadLayerPart
+                Resource:
+                  - !Sub arn:${AWS::Partition}:ecr:${AWS::Region}:${AWS::AccountId}:repository/${EcrRepositoryName}
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource:
+                  - '*'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
