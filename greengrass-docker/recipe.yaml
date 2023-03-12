@@ -12,8 +12,8 @@ ComponentDependencies:
 ComponentConfiguration:
   DefaultConfiguration:
     accessControl:
-      aws.greengrass.ipc.mqttproxy:
-        com.devopstar.RobocatContainer:pubsub:2:
+      aws.greengrass.ipc.pubsub:
+        com.devopstar.RobocatContainer:pubsub:1:
           policyDescription: Allows access to publish to devopstar/robocat/thing/meow topic
           operations:
             - aws.greengrass#PublishToTopic
