@@ -18,7 +18,7 @@ ComponentConfiguration:
           operations:
             - aws.greengrass#PublishToTopic
           resources:
-            - devopstar/robocat/{iot:thingName}/meow
+            - "*"
 Manifests:
 - Name: Linux
   Platform:
