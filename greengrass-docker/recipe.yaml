@@ -7,11 +7,11 @@ ComponentPublisher: Nathan Glover
 ComponentConfiguration:
   DefaultConfiguration:
     accessControl:
-      aws.greengrass.ipc.mqttproxy:
-        com.devopstar.RobocatContainer:mqttproxy:1:
+      aws.greengrass.ipc.pubsub:
+        com.devopstar.RobocatContainer:pubsub:1:
           policyDescription: Allows access to publish to devopstar/robocat/thing/meow topic
           operations:
-            - aws.greengrass#PublishToIoTCore
+            - aws.greengrass#PublishToTopic
           resources:
             - devopstar/robocat/{iot:thingName}/meow
 Manifests:
