@@ -3,10 +3,10 @@ import logging
 import time
 
 import awsiot.greengrasscoreipc
-import awsiot.greengrasscoreipc.client as client
 from awsiot.greengrasscoreipc.model import (
-    QOS,
-    PublishToIoTCoreRequest
+    PublishToTopicRequest,
+    PublishMessage,
+    BinaryMessage
 )
 
 TIMEOUT = 10
@@ -34,15 +34,16 @@ while True:
 
     topic = "devopstar/robocat/{}/meow".format(thing_name)
     message = "Meow! from {} running in {} container".format(thing_name, hostname)
-    qos = QOS.AT_LEAST_ONCE
 
-    request = PublishToIoTCoreRequest()
-    request.topic_name = topic
-    request.payload = bytes(message, "utf-8")
-    request.qos = qos
+    request = PublishToTopicRequest()
+    request.topic = topic
+    publish_message = PublishMessage()
+    publish_message.binary_message = BinaryMessage()
+    publish_message.binary_message.message = bytes(message, "utf-8")
 
     try:
-        operation = ipc_client.new_publish_to_iot_core()
+        request.publish_message = publish_message
+        operation = ipc_client.new_publish_to_topic()
         logger.info("Publishing message to topic {}: {}".format(topic, message))
         operation.activate(request)
         future_response = operation.get_response()
