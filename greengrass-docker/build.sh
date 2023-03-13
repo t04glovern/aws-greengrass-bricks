@@ -31,6 +31,8 @@ mkdir ./custom-build
 # build & save Docker image to tar file 
 docker buildx build \
   --platform linux/arm/v7 \
+  --cache-to "type=s3,region=ap-southeast-2,bucket=docker-cache-ap-southeast-2-536829251200,name=greengrass-docker" \
+  --cache-from "type=s3,region=ap-southeast-2,bucket=docker-cache-ap-southeast-2-536829251200,name=greengrass-docker" \
   --output "type=docker,push=false,name=$CONTAINER_TAG,dest=./custom-build/container.tar" .
 
 # build & push Docker image to ECR
