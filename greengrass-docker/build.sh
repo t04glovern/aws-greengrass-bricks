@@ -31,8 +31,8 @@ mkdir ./custom-build
 # build & save Docker image to tar file 
 docker buildx build \
   --platform linux/arm/v7 \
-  --cache-to "type=gha,mode=max" \
-  --cache-from "type=gha" \
+  --cache-to "type=local,dest=/tmp/.buildx-cache-new" \
+  --cache-from "type=local,src=/tmp/.buildx-cache" \
   --output "type=docker,push=false,name=$CONTAINER_TAG,dest=./custom-build/container.tar" .
 
 # build & push Docker image to ECR

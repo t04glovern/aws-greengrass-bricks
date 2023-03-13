@@ -36,6 +36,14 @@ jobs:
       with:
        platforms: linux/arm/v7
 
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-single-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-single-buildx
+
     - uses: actions/setup-python@v3
       with:
         python-version: '3.9'
@@ -69,6 +77,14 @@ jobs:
           --query 'componentVersions[0].componentVersion')
 
         echo "::set-output name=version::${LATEST_COMPONENT_VERSION}"
+
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
   deploy:
     name: Component deploy
     runs-on: ubuntu-latest
