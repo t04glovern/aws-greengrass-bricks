@@ -33,14 +33,14 @@ docker buildx build \
   --platform linux/arm/v7 \
   --output "type=docker,push=false,name=$CONTAINER_TAG,dest=./custom-build/container.tar" .
 
-# # build & push Docker image to ECR
-# aws ecr get-login-password --region ap-southeast-2 | \
-#   docker login \
-#     --username AWS \
-#     --password-stdin 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com
-# docker buildx build \
-#   --platform linux/arm/v7 \
-#   --output "type=registry,name=536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/$CONTAINER_TAG:latest" .
+# build & push Docker image to ECR
+aws ecr get-login-password --region ap-southeast-2 | \
+  docker login \
+    --username AWS \
+    --password-stdin 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com
+docker buildx build \
+  --platform linux/arm/v7 \
+  --output "type=registry,name=536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/$CONTAINER_TAG:latest" .
 
 # zip up archive
 zip -r -j -X ./custom-build/container.zip ./custom-build

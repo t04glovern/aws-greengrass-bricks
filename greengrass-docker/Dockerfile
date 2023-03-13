@@ -6,5 +6,7 @@ COPY requirements.txt ./
 RUN pip install -r ./requirements.txt
 
 COPY src/robocat_pub.py ./
+COPY src/robocat_sub.py ./
 
-CMD ["python", "robocat_pub.py"]
+ENTRYPOINT [ "python" ]
+CMD ["robocat_pub.py"]

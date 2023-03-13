@@ -1,6 +1,7 @@
 import os
 import logging
 import time
+import traceback
 
 import awsiot.greengrasscoreipc
 from awsiot.greengrasscoreipc.model import (
@@ -49,4 +50,5 @@ while True:
         future_response = operation.get_response()
         future_response.result(TIMEOUT)
     except Exception as e:
+        traceback.print_exc()
         logger.error("Failed to publish message {}".format(e))
