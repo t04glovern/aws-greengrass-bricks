@@ -12,14 +12,13 @@
 # Replace componentName with the component name, and replace componentVersion with
 # the component version or NEXT_PATCH.
 
-if [ $# -ne 3 ]; then
-  echo 1>&2 "Usage: $0 COMPONENT-NAME COMPONENT-VERSION CONTAINER-TAG"
+if [ $# -ne 2 ]; then
+  echo 1>&2 "Usage: $0 COMPONENT-NAME COMPONENT-VERSION"
   exit 3
 fi
 
 COMPONENT_NAME=$1
 COMPONENT_VERSION=$2
-CONTAINER_TAG=$3
 
 # copy recipe to greengrass-build
 cp recipe.yaml ./greengrass-build/recipes
@@ -28,21 +27,27 @@ cp recipe.yaml ./greengrass-build/recipes
 rm -rf ./custom-build
 mkdir ./custom-build
 
+# Create builder instance
+docker buildx create --name greengrass-docker-builder \
+  --platform linux/arm/v7 \
+  --use
+
 # build & save Docker image to tar file 
 docker buildx build \
-  --platform linux/arm/v7 \
-  --cache-to "type=local,dest=/tmp/.buildx-cache-new" \
+  --cache-to "type=local,dest=/tmp/.buildx-cache" \
   --cache-from "type=local,src=/tmp/.buildx-cache" \
-  --output "type=docker,push=false,name=$CONTAINER_TAG,dest=./custom-build/container.tar" .
+  --output "type=docker,push=false,name=robocatcontainer,dest=./custom-build/container.tar" .
 
 # build & push Docker image to ECR
 aws ecr get-login-password --region ap-southeast-2 | \
-  docker login \
-    --username AWS \
-    --password-stdin 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com
+docker login --username AWS --password-stdin 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com
 docker buildx build \
-  --platform linux/arm/v7 \
-  --output "type=registry,name=536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/$CONTAINER_TAG:latest" .
+  --cache-to "type=local,dest=/tmp/.buildx-cache" \
+  --cache-from "type=local,src=/tmp/.buildx-cache" \
+  --output "type=registry,name=536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest" .
+
+# Remove builder instance
+docker buildx rm greengrass-docker-builder
 
 # zip up archive
 zip -r -j -X ./custom-build/container.zip ./custom-build

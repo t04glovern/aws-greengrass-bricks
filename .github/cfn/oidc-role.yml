@@ -62,7 +62,7 @@ Resources:
                   - s3:GetObject
                   - s3:PutObject
                 Resource:
-                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/${GreengrassComponentName}/*
+                  - !Sub arn:aws:s3:::greengrass-component-artifacts-${AWS::Region}-${AWS::AccountId}/${GreengrassComponentName}*
         - PolicyName: greengrass-components
           PolicyDocument:
             Version: '2012-10-17'
@@ -72,7 +72,7 @@ Resources:
                   - greengrass:CreateComponentVersion
                   - greengrass:ListComponentVersions
                 Resource:
-                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:components:${GreengrassComponentName}
+                  - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:components:${GreengrassComponentName}*
         - PolicyName: greengrass-deployment
           PolicyDocument:
             Version: '2012-10-17'

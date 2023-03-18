@@ -14,8 +14,8 @@ logging.basicConfig(level=logging.INFO)
 
 def on_stream_event(event: SubscriptionResponseMessage) -> None:
     try:
-        message = str(event.binary_message.message, 'utf-8')
-        topic = event.binary_message.context.topic
+        message = event.json_message.message
+        topic = event.json_message.context.topic
         logger.info('Received new message on topic %s: %s' % (topic, message))
     except:
         traceback.print_exc()

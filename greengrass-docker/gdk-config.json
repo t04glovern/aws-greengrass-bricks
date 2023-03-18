@@ -9,8 +9,7 @@
           "bash",
           "build.sh",
           "com.devopstar.RobocatContainer",
-          "NEXT_PATCH",
-          "robocatcontainer"
+          "NEXT_PATCH"
         ]
       },
       "publish": {
