@@ -14,12 +14,12 @@ ComponentConfiguration:
     accessControl:
       aws.greengrass.ipc.pubsub:
         com.devopstar.RobocatContainer:pubsub:1:
-          policyDescription: Allows access to publish to devopstar/robocat/thing/meow topic
+          policyDescription: Allows access to publish to devopstar/robocat/+/meow topic
           operations:
             - aws.greengrass#PublishToTopic
             - aws.greengrass#SubscribeToTopic
           resources:
-            - '*'
+            - devopstar/robocat/*/meow
 Manifests:
 - Name: Linux
   Platform:
