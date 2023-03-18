@@ -59,10 +59,10 @@ Manifests:
     Shutdown:
       RequiresPrivilege: true
       Script: |-
-        docker stop robocatcontainer-zipped
-        docker stop robocatcontainer-ecr
+        docker stop robocatcontainer-zipped || true
+        docker stop robocatcontainer-ecr || true
     Recover:
       RequiresPrivilege: true
       Script: |-
-        docker stop robocatcontainer-zipped
-        docker stop robocatcontainer-ecr
+        docker stop robocatcontainer-zipped || true
+        docker stop robocatcontainer-ecr || true
