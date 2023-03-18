@@ -49,7 +49,7 @@ Manifests:
               - AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=${AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT}
               - AWS_IOT_THING_NAME=${AWS_IOT_THING_NAME}
             volumes:
-              - ${kernel:rootPath}/ipc.socket:${kernel:rootPath}/ipc.socket
+              - {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket
             network_mode: "host"
 
           robocatcontainer-ecr:
@@ -64,7 +64,7 @@ Manifests:
               - AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT=${AWS_GG_NUCLEUS_DOMAIN_SOCKET_FILEPATH_FOR_COMPONENT}
               - AWS_IOT_THING_NAME=${AWS_IOT_THING_NAME}
             volumes:
-              - ${kernel:rootPath}/ipc.socket:${kernel:rootPath}/ipc.socket
+              - {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket
             network_mode: "host"
         EOF
 
