@@ -1,6 +1,8 @@
-FROM python:3.9-bullseye
+FROM python:3.9-slim-bullseye
 
-RUN apt-get update && apt-get install -y cmake
+RUN apt-get update && apt-get install -y cmake \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
 RUN pip install -r ./requirements.txt

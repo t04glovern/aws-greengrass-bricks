@@ -1,4 +1,3 @@
-import os
 import logging
 import time
 import traceback
@@ -11,11 +10,6 @@ from awsiot.greengrasscoreipc.model import (
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-
-thing_name = os.environ.get("AWS_IOT_THING_NAME")
-if not thing_name:
-    logger.error("AWS_IOT_THING_NAME is empty")
-    raise ValueError("AWS_IOT_THING_NAME is empty")
 
 
 def on_stream_event(event: SubscriptionResponseMessage) -> None:
@@ -39,7 +33,7 @@ def on_stream_closed() -> None:
 
 # Keep the main thread alive, or the process will exit.
 while True:
-    topic = "devopstar/robocat/{}/meow".format(thing_name)
+    topic = "devopstar/robocat/+/meow"
 
     try:
         ipc_client = GreengrassCoreIPCClientV2()

@@ -19,7 +19,7 @@ ComponentConfiguration:
             - aws.greengrass#PublishToTopic
             - aws.greengrass#SubscribeToTopic
           resources:
-            - "*"
+            - devopstar/robocat/*/meow
 Manifests:
 - Name: Linux
   Platform:
