@@ -4,7 +4,10 @@
     "components": {
         "com.devopstar.RobocatContainer": {
             "componentVersion": "$LATEST_COMPONENT_VERSION",
-            "runWith": {}
+            "runWith": {},
+            "configurationUpdate": {
+                "reset": [""]
+            }
         },
         "aws.greengrass.Nucleus": {
             "componentVersion": "2.9.4"
