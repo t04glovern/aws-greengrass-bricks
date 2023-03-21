@@ -6,7 +6,7 @@
             "componentVersion": "$LATEST_COMPONENT_VERSION",
             "runWith": {},
             "configurationUpdate": {
-                "reset": [""]
+                "merge": "{\"ecrRepository\":\"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/robocatcontainer:latest\"}
             }
         },
         "aws.greengrass.Nucleus": {

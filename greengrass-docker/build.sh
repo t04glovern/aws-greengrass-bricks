@@ -52,7 +52,7 @@ docker buildx build \
 docker buildx rm greengrass-docker-builder
 
 # zip up archive
-zip -r -j -X ./custom-build/container.zip ./custom-build
+zip -X -D ./custom-build/container.zip ./custom-build/container.tar
 
 # copy archive to greengrass-build
 cp ./custom-build/container.zip ./greengrass-build/artifacts/$COMPONENT_NAME/$COMPONENT_VERSION/

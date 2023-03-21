@@ -11,6 +11,7 @@ ComponentDependencies:
     VersionRequirement: ~2.0.0
 ComponentConfiguration:
   DefaultConfiguration:
+    ecrRepository: 012345678901.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest
     accessControl:
       aws.greengrass.ipc.pubsub:
         com.devopstar.RobocatContainer:pubsub:1:
@@ -27,11 +28,11 @@ Manifests:
   Artifacts:
     - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/container.zip"
       Unarchive: ZIP
-    - URI: "docker:536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest"
+    - URI: "docker:{configuration:/ecrRepository}"
   Lifecycle:
     Install:
       RequiresPrivilege: true
-      Script: docker load -i {artifacts:decompressedPath}/container/container.tar
+      Script: docker load -i {artifacts:decompressedPath}/container.tar
     Run:
       RequiresPrivilege: true
       Script: |-
@@ -54,7 +55,7 @@ Manifests:
 
           robocatcontainer-ecr:
             container_name: robocatcontainer-ecr
-            image: 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer
+            image: {configuration:/ecrRepository}
             command: robocat_sub.py
             environment:
               - AWS_CONTAINER_AUTHORIZATION_TOKEN=${AWS_CONTAINER_AUTHORIZATION_TOKEN}
