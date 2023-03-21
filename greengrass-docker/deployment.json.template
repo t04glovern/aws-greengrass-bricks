@@ -5,9 +5,7 @@
         "com.devopstar.RobocatContainer": {
             "componentVersion": "$LATEST_COMPONENT_VERSION",
             "runWith": {},
-            "configurationUpdate": {
-                "merge": "{\"ecrRepository\":\"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/robocatcontainer:latest\"}
-            }
+            "reset": [""]
         },
         "aws.greengrass.Nucleus": {
             "componentVersion": "2.9.4"
