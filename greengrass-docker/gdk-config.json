@@ -7,10 +7,12 @@
         "build_system": "custom",
         "custom_build_command": [
           "bash",
-          "build.sh",
-          "com.devopstar.RobocatContainer",
-          "NEXT_PATCH",
-          "robocatcontainer"
+          "custom-build-docker.sh",
+          "--component-name=com.devopstar.RobocatContainer",
+          "--component-version=NEXT_PATCH",
+          "--container-name=robocatcontainer",
+          "--container-arch=linux/arm/v7",
+          "--container-push"
         ]
       },
       "publish": {
