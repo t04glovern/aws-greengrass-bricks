@@ -64,8 +64,7 @@ elif [ "$CONTAINER_PUSH" == "true" ]; then
     echo "ERROR: AWS credentials not set. Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_REGION."
     exit 3
   fi
-  AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
-  AWS_REGION=$(aws configure get region --output text)
+  AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
   echo "Using AWS account ID: $AWS_ACCOUNT_ID and region: $AWS_REGION to push container to ECR"
 fi
 
