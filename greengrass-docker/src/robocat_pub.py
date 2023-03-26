@@ -29,7 +29,8 @@ while True:
     topic = "devopstar/robocat/{}/meow".format(thing_name)
     message = {
         "thing": thing_name,
-        "message": "Meow!"
+        "message": "Meow!",
+        "time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     }
 
     try:

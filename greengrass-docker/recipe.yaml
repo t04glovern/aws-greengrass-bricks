@@ -39,8 +39,8 @@ Manifests:
         version: '3'
 
         services:
-          robocatcontainer-zipped:
-            container_name: robocatcontainer-zipped
+          robocatcontainer-pub:
+            container_name: robocatcontainer-pub
             image: robocatcontainer
             command: robocat_pub.py
             environment:
@@ -52,8 +52,8 @@ Manifests:
               - {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket
             network_mode: "host"
 
-          robocatcontainer-ecr:
-            container_name: robocatcontainer-ecr
+          robocatcontainer-sub:
+            container_name: robocatcontainer-sub
             image: 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest
             command: robocat_sub.py
             environment:
