@@ -60,12 +60,12 @@ fi
 if [ "$CONTAINER_PUSH" == "false" ]; then
   echo "WARNING: Container will not be pushed to ECR. Use --container-push to push to ECR."
 elif [ "$CONTAINER_PUSH" == "true" ]; then
-  if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]]; then
-    echo "ERROR: AWS credentials not set. Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY."
+  if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" || -z "$AWS_REGION" ]]; then
+    echo "ERROR: AWS credentials not set. Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_REGION."
     exit 3
   fi
-  AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-  AWS_REGION=$(aws configure get region --output text || echo "us-east-1")
+  AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+  AWS_REGION=$(aws configure get region --output text)
   echo "Using AWS account ID: $AWS_ACCOUNT_ID and region: $AWS_REGION to push container to ECR"
 fi
 
