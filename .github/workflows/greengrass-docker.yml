@@ -15,7 +15,7 @@ on:
 
 env:
   GREENGRASS_COMPONENT_NAME: com.devopstar.RobocatContainer
-  GREENGRASS_REGION: ap-southeast-2
+  AWS_REGION: ap-southeast-2
   working-directory: ./greengrass-docker
 
 jobs:
@@ -56,8 +56,6 @@ jobs:
     - name: GDK Build
       run: gdk component build
       working-directory: ${{ env.working-directory }}
-      env:
-        AWS_REGION: ${{ env.GREENGRASS_REGION }}
 
     - name: GDK Publish
       run: gdk component publish
@@ -67,7 +65,6 @@ jobs:
       id: gdk_version
       run: |
         export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
-        export AWS_REGION=${GREENGRASS_REGION}
         export LATEST_COMPONENT_VERSION=$(aws greengrassv2 list-component-versions \
           --output text \
           --no-paginate \
@@ -97,7 +94,6 @@ jobs:
     - name: Deploy Greengrass component
       run: |
         export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
-        export AWS_REGION=${GREENGRASS_REGION}
         envsubst < "deployment.json.template" > "deployment.json"
         aws greengrassv2 create-deployment \
           --cli-input-json file://deployment.json \
