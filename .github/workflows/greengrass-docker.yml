@@ -82,6 +82,7 @@ jobs:
     needs: publish
     permissions:
       id-token: write
+      pull-requests: write
       contents: read
 
     steps:
@@ -95,13 +96,26 @@ jobs:
         aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
 
     - name: Deploy Greengrass component
+      id: deploy
       run: |
         export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
         export AWS_REGION=${GREENGRASS_REGION}
         envsubst < "deployment.json.template" > "deployment.json"
-        aws greengrassv2 create-deployment \
+        DEPLOYMENT_ID=$(aws greengrassv2 create-deployment \
+          --output text \
+          --no-paginate \
+          --region ${AWS_REGION} \
           --cli-input-json file://deployment.json \
-          --region ${AWS_REGION}
+          --query 'deploymentId')
+
+        echo "::set-output name=deployment_id::${DEPLOYMENT_ID}"
       env:
         LATEST_COMPONENT_VERSION: ${{needs.publish.outputs.publised_version}}
       working-directory: ${{ env.working-directory }}
+
+    - name: Greengrass Deployment Status
+      uses: t04glovern/greengrass-deployment-status-action@main
+      with:
+        aws_region: ap-southeast-2
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        deployment_id: ${{ steps.deploy.outputs.deployment_id }}

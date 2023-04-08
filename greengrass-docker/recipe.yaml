@@ -1,9 +1,9 @@
 ---
 RecipeFormatVersion: "2020-01-25"
-ComponentName: "{COMPONENT_NAME}"
-ComponentVersion: "{COMPONENT_VERSION}"
+ComponentName: com.devopstar.RobocatContainer
+ComponentVersion: NEXT_PATCH
 ComponentDescription: AWS IoT Greengrass component to pet your robocat fleet via subscription in a docker container
-ComponentPublisher: "{COMPONENT_AUTHOR}"
+ComponentPublisher: Nathan Glover
 ComponentDependencies:
   aws.greengrass.DockerApplicationManager:
     VersionRequirement: ~2.0.0
