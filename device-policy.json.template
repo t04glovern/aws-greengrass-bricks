@@ -13,12 +13,18 @@
     {
       "Effect": "Allow",
       "Action": [
-        "ecr:GetAuthorizationToken",
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "ecr:BatchGetImage",
         "ecr:GetDownloadUrlForLayer"
       ],
       "Resource": [
-        "*"
+        "arn:aws:ecr:$AWS_REGION:$AWS_ACCOUNT_ID:repository/robocatcontainer"
       ]
     }
   ]

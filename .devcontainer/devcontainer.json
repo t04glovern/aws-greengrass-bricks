@@ -16,7 +16,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.1"
+	"postCreateCommand": "pip3 install --user git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.2"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
