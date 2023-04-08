@@ -51,7 +51,7 @@ jobs:
         aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
 
     - name: Install Greengrass Development Kit
-      run: pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.1
+      run: pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.2.2
 
     - name: GDK Build
       run: gdk component build
