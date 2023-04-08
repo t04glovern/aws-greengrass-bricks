@@ -117,5 +117,4 @@ jobs:
       uses: t04glovern/greengrass-deployment-status-action@main
       with:
         aws_region: ${{ env.GREENGRASS_REGION }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
         deployment_id: ${{ steps.deploy.outputs.deployment_id }}
