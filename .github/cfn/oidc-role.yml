@@ -73,7 +73,7 @@ Resources:
                   - greengrass:ListComponentVersions
                 Resource:
                   - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:components:${GreengrassComponentName}*
-        - PolicyName: greengrass-deployment
+        - PolicyName: greengrass-deployment-create
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -82,6 +82,15 @@ Resources:
                   - greengrass:CreateDeployment
                 Resource:
                   - !Sub arn:aws:greengrass:${AWS::Region}:${AWS::AccountId}:deployments
+        - PolicyName: greengrass-deployment-get
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - greengrass:GetDeployment
+                Resource:
+                  - !Sub arn:${AWS::Partition}:greengrass:${AWS::Region}:${AWS::AccountId}:deployments:*
         - PolicyName: ecr-deployment
           PolicyDocument:
             Version: '2012-10-17'
