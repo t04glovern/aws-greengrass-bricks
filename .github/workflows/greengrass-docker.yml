@@ -112,9 +112,3 @@ jobs:
       env:
         LATEST_COMPONENT_VERSION: ${{needs.publish.outputs.publised_version}}
       working-directory: ${{ env.working-directory }}
-
-    - name: Greengrass Deployment Status
-      uses: t04glovern/greengrass-deployment-status-action@main
-      with:
-        aws_region: ${{ env.GREENGRASS_REGION }}
-        deployment_id: ${{ steps.deploy.outputs.deployment_id }}
