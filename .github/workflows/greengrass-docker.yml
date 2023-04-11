@@ -26,7 +26,7 @@ jobs:
       id-token: write
       contents: read
     outputs:
-      publised_version: ${{ steps.gdk_version.outputs.version }}
+      published_version: ${{ steps.gdk_version.outputs.version }}
 
     steps:
     - name: Checkout
@@ -74,7 +74,7 @@ jobs:
           --arn arn:aws:greengrass:${AWS_REGION}:${AWS_ACCOUNT_ID}:components:${GREENGRASS_COMPONENT_NAME} \
           --query 'componentVersions[0].componentVersion')
 
-        echo "::set-output name=version::${LATEST_COMPONENT_VERSION}"
+        echo "version=${LATEST_COMPONENT_VERSION}" >> $GITHUB_OUTPUT
 
   deploy:
     name: Component deploy
@@ -108,9 +108,9 @@ jobs:
           --cli-input-json file://deployment.json \
           --query 'deploymentId')
 
-        echo "::set-output name=deployment_id::${DEPLOYMENT_ID}"
+        echo "deployment_id=${DEPLOYMENT_ID}" >> $GITHUB_OUTPUT
       env:
-        LATEST_COMPONENT_VERSION: ${{needs.publish.outputs.publised_version}}
+        LATEST_COMPONENT_VERSION: ${{ needs.publish.outputs.published_version }}
       working-directory: ${{ env.working-directory }}
 
     - name: Greengrass Deployment Status
