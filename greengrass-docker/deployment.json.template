@@ -10,10 +10,10 @@
             }
         },
         "aws.greengrass.Nucleus": {
-            "componentVersion": "2.9.6"
+            "componentVersion": "2.9.4"
         },
         "aws.greengrass.clientdevices.mqtt.Bridge": {
-            "componentVersion": "2.2.5",
+            "componentVersion": "2.2.4",
             "configurationUpdate": {
                 "merge": "{\"mqttTopicMapping\":{\"StatMapping\":{\"topic\":\"devopstar/robocat/+/meow\",\"source\":\"Pubsub\",\"target\":\"IotCore\"}}}"
             },
