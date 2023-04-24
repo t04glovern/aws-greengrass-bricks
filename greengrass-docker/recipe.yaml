@@ -60,6 +60,15 @@ Manifests:
               - AWS_IOT_THING_NAME=${AWS_IOT_THING_NAME}
             volumes:
               - {kernel:rootPath}/ipc.socket:{kernel:rootPath}/ipc.socket
+
+          robocatcontainer-aws-auth:
+            container_name: robocatcontainer-aws-auth
+            image: 536829251200.dkr.ecr.ap-southeast-2.amazonaws.com/robocatcontainer:latest
+            command: robocat_aws_auth.py
+            environment:
+              - AWS_CONTAINER_AUTHORIZATION_TOKEN=${AWS_CONTAINER_AUTHORIZATION_TOKEN}
+              - AWS_CONTAINER_CREDENTIALS_FULL_URI=${AWS_CONTAINER_CREDENTIALS_FULL_URI}
+            network_mode: "host"
         EOF
 
         docker compose up
