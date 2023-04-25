@@ -6,6 +6,7 @@ This repository contains a set of good practices and examples when working with 
 
 * [01 - Setting up an AWS IoT Greengrass v2 Learning environment](https://devopstar.com/2022/09/21/aws-iot-greengrass-v2-learning-environment) - **This step is mandatory** for ALL other tutorials in this repository
 * [02 - Using Github Actions for AWS IoT Greengrass v2 Continuous Deployment](https://devopstar.com/2022/09/22/github-actions-for-aws-iot-greengrass-v2-continuous-deployment)
+* [03 - Deploying Containers to AWS Greengrass v2 - A Comprehensive Guide](https://devopstar.com/2023/04/25/deploying-containers-to-aws-greengrass-v2-a-comprehensive-guide)
 
 ## Basic Setup
 
