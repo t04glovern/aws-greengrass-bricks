@@ -1,2 +1,2 @@
-awsiotsdk==1.12.5
+awsiotsdk==1.15.0
 boto3==1.26.118
