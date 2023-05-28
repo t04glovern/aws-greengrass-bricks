@@ -35,6 +35,7 @@ logManager_config = {
         },
         "componentLogsConfigurationMap": {
             "com.devopstar.Robocat": {
+                "logFileRegex": "com\.devopstar\.Robocat_\\d{4}_\\d{1,2}_\\d{1,2}_\\d{1,2}_\\d{1,2}\.log",
                 "minimumLogLevel": "INFO",
                 "diskSpaceLimit": "20",
                 "diskSpaceLimitUnit": "MB",
