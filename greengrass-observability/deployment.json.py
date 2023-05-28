@@ -1,6 +1,19 @@
 import json
 import os
 
+"""
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+export AWS_REGION=ap-southeast-2
+
+python deployment.json.py
+
+aws greengrassv2 create-deployment \
+    --output text \
+    --no-paginate \
+    --region ${AWS_REGION} \
+    --cli-input-json file://deployment.json
+"""
+
 AWS_REGION = os.getenv('AWS_REGION')
 if not AWS_REGION:
     raise ValueError("AWS_REGION environment variable not set.")
