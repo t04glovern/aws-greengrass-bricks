@@ -29,7 +29,7 @@ configuration = {
             "componentVersion": "2.10.1"
         },
         "aws.greengrass.Cli": {
-            "componentVersion": "2.10.0"
+            "componentVersion": "2.10.1"
         },
         "aws.greengrass.clientdevices.mqtt.Bridge": {
             "componentVersion": "2.2.5",
@@ -74,7 +74,7 @@ configuration = {
             "runWith": {}
         },
         "aws.greengrass.LocalDebugConsole": {
-            "componentVersion": "2.2.8",
+            "componentVersion": "2.3.0",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "httpsEnabled": "false"
