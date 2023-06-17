@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - feature/greengrass-batch-uploader
+      - main
     paths:
       - greengrass-batch-uploader/**
       - .github/workflows/greengrass-batch-uploader.yml
@@ -43,12 +43,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-single-buildx
 
-    - uses: actions/setup-python@v3
+    - uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.10'
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: ${{ secrets.OIDC_ROLE_AWS_ROLE_TO_ASSUME }}
         aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
@@ -97,10 +97,14 @@ jobs:
         python-version: '3.10'
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: ${{ secrets.OIDC_ROLE_AWS_ROLE_TO_ASSUME }}
         aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
+
+    - name: Install Dev Requirements
+      run: pip install -r requirements.txt
+      working-directory: ${{ env.working-directory }}
 
     - name: Deploy Greengrass component
       id: deploy
