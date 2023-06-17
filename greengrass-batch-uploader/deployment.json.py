@@ -45,7 +45,7 @@ configuration = {
             "runWith": {},
             "configurationUpdate": {
                 "merge": json.dumps({
-                    "Enabled": "true",
+                    "Enabled": "false",
                     "Frequency": "1.0"
                 })
             }
@@ -54,21 +54,21 @@ configuration = {
             "componentVersion": "2.1.8",
         },
         "com.devopstar.json.gzip": {
-            "componentVersion": "1.0.3",
+            "componentVersion": "1.0.8",
             "configurationUpdate": {
                 "merge": json.dumps({
-                    "OutputFolder": "/tmp/greengrass/gzip"
-                })
-            },
-            "runWith": {}
-        },
-        "aws.greengrass.labs.s3.file.uploader": {
-            "componentVersion": "1.0.3",
-            "configurationUpdate": {
-                "merge": json.dumps({
-                    "BucketName": "greengrass-stream-manager-gzip-ap-southeast-2-536829251200",
-                    "PathName": "/tmp/greengrass/gzip/*",
-                    "Interval": "10",
+                    "Processor": {
+                        "StreamName": "BatchMessageStream",
+                        "BatchSize": "20",
+                        "Interval": "30",
+                        "Path": "/tmp/greengrass/gzip"
+                    },
+                    "Uploader": {
+                        "BucketName": "greengrass-stream-manager-gzip-ap-southeast-2-536829251200",
+                        "Interval": "10",
+                        "Path": "/tmp/greengrass/gzip/*"
+                    },
+                    "LogLevel": "INFO"
                 })
             },
             "runWith": {}

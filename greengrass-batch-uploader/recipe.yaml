@@ -30,4 +30,4 @@ Manifests:
     Run:
       RequiresPrivilege: false
       Script: |-
-        python3 {artifacts:decompressedPath}/greengrass-batch-uploader/src/robocat.py "{configuration:/Enabled}" "{configuration:/Frequency}"
+        python3 -u {artifacts:decompressedPath}/greengrass-batch-uploader/src/robocat.py "{configuration:/Enabled}" "{configuration:/Frequency}"
