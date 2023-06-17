@@ -103,7 +103,7 @@ jobs:
         aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
 
     - name: Install Dev Requirements
-      run: pip install -r requirements.txt
+      run: pip install -r requirements-dev.txt
       working-directory: ${{ env.working-directory }}
 
     - name: Deploy Greengrass component
