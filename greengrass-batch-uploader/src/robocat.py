@@ -42,6 +42,8 @@ if __name__ == "__main__":
         enabled = bool(sys.argv[1])
         frequency = int(sys.argv[2])
 
+        logging.info(f"enabled: {enabled}, frequency: {frequency}")
+
         try:
             while True:
                 if enabled:
