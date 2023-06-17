@@ -39,7 +39,10 @@ def generate_random_json(id, speed, temperature, location):
 if __name__ == "__main__":
     # args : enabled, frequency
     if len(sys.argv) == 3:
-        enabled = bool(sys.argv[1])
+        if sys.argv[1] == "true":
+            enabled = True
+        else:
+            enabled = False
         frequency = float(sys.argv[2])
 
         logging.info(f"enabled: {enabled}, frequency: {frequency}")
