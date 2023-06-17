@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - feature/greengrass-batch-uploader
     paths:
       - greengrass-batch-uploader/**
       - .github/workflows/greengrass-batch-uploader.yml

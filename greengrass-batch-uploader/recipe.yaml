@@ -11,7 +11,7 @@ ComponentDependencies:
 ComponentConfiguration:
   DefaultConfiguration:
     Enabled: "false"
-    Frequency: "100"
+    Frequency: "1.0"
 Manifests:
 - Name: Linux
   Platform:

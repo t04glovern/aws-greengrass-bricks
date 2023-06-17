@@ -40,7 +40,7 @@ if __name__ == "__main__":
     # args : enabled, frequency
     if len(sys.argv) == 3:
         enabled = bool(sys.argv[1])
-        frequency = int(sys.argv[2])
+        frequency = float(sys.argv[2])
 
         logging.info(f"enabled: {enabled}, frequency: {frequency}")
 
