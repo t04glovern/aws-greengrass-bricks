@@ -1,0 +1,33 @@
+---
+RecipeFormatVersion: "2020-01-25"
+ComponentName: "{COMPONENT_NAME}"
+ComponentVersion: "{COMPONENT_VERSION}"
+ComponentDescription: AWS IoT Greengrass component to pet your robocat fleet via subscription
+ComponentPublisher: "{COMPONENT_AUTHOR}"
+ComponentDependencies:
+  aws.greengrass.StreamManager:
+    VersionRequirement: "^2.0.0"
+    DependencyType: "HARD"
+ComponentConfiguration:
+  DefaultConfiguration:
+    Enabled: "false"
+    Frequency: "100"
+Manifests:
+- Name: Linux
+  Platform:
+    os: linux
+  Artifacts:
+    - URI: "s3://BUCKET_NAME/COMPONENT_NAME/COMPONENT_VERSION/greengrass-batch-uploader.zip"
+      Unarchive: ZIP
+      Permission:
+        Execute: ALL
+        READ: ALL
+  Lifecycle:
+    Install:
+      RequiresPrivilege: false
+      Script: |-
+        pip3 install -r {artifacts:decompressedPath}/greengrass-batch-uploader/requirements.txt
+    Run:
+      RequiresPrivilege: false
+      Script: |-
+        python3 {artifacts:decompressedPath}/greengrass-batch-uploader/src/robocat.py {configuration:/Enabled} {configuration:/Frequency}

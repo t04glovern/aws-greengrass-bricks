@@ -26,6 +26,17 @@
       "Resource": [
         "arn:aws:ecr:$AWS_REGION:$AWS_ACCOUNT_ID:repository/robocatcontainer"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts"
+      ],
+      "Resource": [
+        "arn:aws:s3:::greengrass-stream-manager-gzip-$AWS_REGION-$AWS_ACCOUNT_ID/*"
+      ]
     }
   ]
 }
