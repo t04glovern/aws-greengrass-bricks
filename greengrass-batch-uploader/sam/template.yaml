@@ -1,0 +1,148 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: S3 event processor
+
+Parameters:
+  Name:
+    Type: String
+
+Resources:
+  LandingBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-landing'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: true
+
+  ArrivalQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub 'batch-uploader-${Name}-arrival'
+      SqsManagedSseEnabled: true
+      VisibilityTimeout: 930
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ArrivalDLQ.Arn
+        maxReceiveCount: 1
+
+  ArrivalQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues: 
+        - !Ref ArrivalQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: 'AllowSendMessageToSqs'
+        Statement:
+          - Sid: 'AllowEventBridgeToSendMessages'
+            Effect: 'Allow'
+            Principal:
+              Service: 'events.amazonaws.com'
+            Action: 'sqs:SendMessage'
+            Resource: !GetAtt ArrivalQueue.Arn
+            Condition:
+              ArnEquals:
+                'aws:SourceArn': !GetAtt S3PutObjectEvent.Arn
+
+  ArrivalDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub 'batch-uploader-${Name}-dlq'
+      SqsManagedSseEnabled: true
+
+  ArrivalDLQPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref ArrivalDLQ
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: 'AllowSendMessageToDlq'
+        Statement:
+          - Sid: 'AllowSqsToSendToDlq'
+            Effect: 'Allow'
+            Principal:
+              Service: 'sqs.amazonaws.com'
+            Action: 'sqs:SendMessage'
+            Resource: !GetAtt ArrivalQueue.Arn
+
+  S3PutObjectEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub 'batch-uploader-${Name}'
+      Description: !Sub 'Capture S3 PutObject events for ${LandingBucket}'
+      State: ENABLED
+      EventPattern:
+        source:
+          - 'aws.s3'
+        detail-type:
+          - 'Object Created'
+        detail:
+          bucket:
+            name:
+              - !Ref LandingBucket
+      Targets:
+        - Arn: !GetAtt ArrivalQueue.Arn
+          Id: 'sqsTargetId'
+          DeadLetterConfig:
+            Arn: !GetAtt ArrivalDLQ.Arn
+
+  BatchArrivalEventProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'batch-uploader-${Name}-batch'
+      Handler: index.handler
+      Runtime: python3.10
+      CodeUri: ./src
+      Policies: 
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}-batch*'
+            - Effect: Allow
+              Action: 
+                - s3:GetObject
+              Resource: !Sub 'arn:aws:s3:::${LandingBucket}/*'
+            - Effect: Allow
+              Action: 
+                - s3:PutObject
+              Resource: !Sub 'arn:aws:s3:::${BatchBucket}/*'
+      Environment:
+        Variables:
+          BATCH_BUCKET_NAME: !Ref BatchBucket
+      Events:
+        S3PutObjectEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt ArrivalQueue.Arn
+            BatchSize: 1
+
+  BatchBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-batch'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'Expire-Data-After-7-Days'
+            Status: 'Enabled'
+            ExpirationInDays: 1
