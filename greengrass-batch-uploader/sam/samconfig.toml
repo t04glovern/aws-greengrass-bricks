@@ -6,5 +6,5 @@ s3_prefix = "greengrass-batch-uploader"
 region = "ap-southeast-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Name=\"robocat-greengrass\""
+parameter_overrides = "Name=\"robocat-greengrass\" IcebergBucketName=\"greengrass-stream-manager-iceberg-ap-southeast-2-536829251200\" IcebergTableName=\"greengrass_data_iceberg\" AthenaQueryOutputBucketName=\"athena-ap-southeast-2-536829251200\""
 image_repositories = []

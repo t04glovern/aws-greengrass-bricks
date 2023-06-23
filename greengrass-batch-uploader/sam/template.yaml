@@ -5,6 +5,12 @@ Description: S3 event processor
 Parameters:
   Name:
     Type: String
+  IcebergBucketName:
+    Type: String
+  IcebergTableName:
+    Type: String
+  AthenaQueryOutputBucketName:
+    Type: String
 
 Resources:
   LandingBucket:
@@ -23,21 +29,21 @@ Resources:
         EventBridgeConfiguration:
           EventBridgeEnabled: true
 
-  ArrivalQueue:
+  LandingQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub 'batch-uploader-${Name}-arrival'
+      QueueName: !Sub 'batch-uploader-${Name}-landing'
       SqsManagedSseEnabled: true
-      VisibilityTimeout: 930
+      VisibilityTimeout: 120
       RedrivePolicy:
-        deadLetterTargetArn: !GetAtt ArrivalDLQ.Arn
+        deadLetterTargetArn: !GetAtt LandingDLQ.Arn
         maxReceiveCount: 1
 
-  ArrivalQueuePolicy:
+  LandingQueuePolicy:
     Type: AWS::SQS::QueuePolicy
     Properties:
       Queues: 
-        - !Ref ArrivalQueue
+        - !Ref LandingQueue
       PolicyDocument:
         Version: '2012-10-17'
         Id: 'AllowSendMessageToSqs'
@@ -47,22 +53,22 @@ Resources:
             Principal:
               Service: 'events.amazonaws.com'
             Action: 'sqs:SendMessage'
-            Resource: !GetAtt ArrivalQueue.Arn
+            Resource: !GetAtt LandingQueue.Arn
             Condition:
               ArnEquals:
                 'aws:SourceArn': !GetAtt S3PutObjectEvent.Arn
 
-  ArrivalDLQ:
+  LandingDLQ:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub 'batch-uploader-${Name}-dlq'
+      QueueName: !Sub 'batch-uploader-${Name}-landing-dlq'
       SqsManagedSseEnabled: true
 
-  ArrivalDLQPolicy:
+  LandingDLQPolicy:
     Type: AWS::SQS::QueuePolicy
     Properties:
       Queues:
-        - !Ref ArrivalDLQ
+        - !Ref LandingDLQ
       PolicyDocument:
         Version: '2012-10-17'
         Id: 'AllowSendMessageToDlq'
@@ -72,7 +78,7 @@ Resources:
             Principal:
               Service: 'sqs.amazonaws.com'
             Action: 'sqs:SendMessage'
-            Resource: !GetAtt ArrivalQueue.Arn
+            Resource: !GetAtt LandingQueue.Arn
 
   S3PutObjectEvent:
     Type: AWS::Events::Rule
@@ -90,16 +96,17 @@ Resources:
             name:
               - !Ref LandingBucket
       Targets:
-        - Arn: !GetAtt ArrivalQueue.Arn
+        - Arn: !GetAtt LandingQueue.Arn
           Id: 'sqsTargetId'
           DeadLetterConfig:
-            Arn: !GetAtt ArrivalDLQ.Arn
+            Arn: !GetAtt LandingDLQ.Arn
 
-  BatchArrivalEventProcessor:
+  BatchEventProcessor:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'batch-uploader-${Name}-batch'
+      FunctionName: !Sub 'batch-uploader-${Name}'
       Handler: index.handler
+      Timeout: 90
       Runtime: python3.10
       CodeUri: ./src
       Policies: 
@@ -110,29 +117,74 @@ Resources:
                 - logs:CreateLogGroup
                 - logs:CreateLogStream
                 - logs:PutLogEvents
-              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}-batch*'
+              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}*'
             - Effect: Allow
               Action: 
                 - s3:GetObject
               Resource: !Sub 'arn:aws:s3:::${LandingBucket}/*'
             - Effect: Allow
               Action: 
+                - s3:GetObject
                 - s3:PutObject
-              Resource: !Sub 'arn:aws:s3:::${BatchBucket}/*'
+                - s3:DeleteObject
+                - s3:ListBucket
+              Resource: 
+                - !Sub 'arn:aws:s3:::${BatchBucket}'
+                - !Sub 'arn:aws:s3:::${BatchBucket}/*'
+                - !Sub 'arn:aws:s3:::${IcebergBucketName}'
+                - !Sub 'arn:aws:s3:::${IcebergBucketName}/*'
+            - Effect: Allow
+              Action: 
+                - s3:GetBucketLocation
+                - s3:GetObject
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:CreateBucket
+                - s3:PutObject
+              Resource: 
+                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}'
+                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}/*'
+            - Effect: Allow
+              Action: 
+                - athena:StartQueryExecution
+                - athena:StopQueryExecution
+                - athena:GetQueryExecution
+                - athena:GetDataCatalog
+              Resource:
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/primary'
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
+            - Effect: Allow
+              Action: 
+                - glue:GetDatabase*
+                - glue:CreateTable
+                - glue:UpdateTable
+                - glue:GetTable
+                - glue:GetTables
+                - glue:DeleteTable
+                - glue:BatchDeleteTable
+                - glue:GetPartition*
+                - glue:BatchGetPartition
+              Resource:
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/${IcebergTableName}*'
       Environment:
         Variables:
+          ATHENA_TABLE: !Ref IcebergTableName
           BATCH_BUCKET_NAME: !Ref BatchBucket
       Events:
         S3PutObjectEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt ArrivalQueue.Arn
+            Queue: !GetAtt LandingQueue.Arn
             BatchSize: 1
 
   BatchBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'batch-uploader-${Name}-batch'
+      BucketName: !Sub 'batch-uploader-${Name}-scratch'
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
