@@ -58,11 +58,16 @@ configuration = {
             "configurationUpdate": {
                 "merge": json.dumps({
                     "mqttTopicMapping": {
-                        "StatMapping": {
+                        "PetMapping": {
                             "topic": "devopstar/robocat/pet",
                             "source": "IotCore",
                             "target": "Pubsub"
-                        }
+                        },
+                        "SpeakMapping": {
+                            "topic": "devopstar/robocat/speak",
+                            "source": "Pubsub",
+                            "target": "IotCore"
+                        },
                     }
                 })
             },

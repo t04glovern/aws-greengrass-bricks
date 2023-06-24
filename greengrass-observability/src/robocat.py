@@ -1,13 +1,14 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX-License-Identifier: MIT-0
+import sys
 import time
 import logging
+import json
 
 import awsiot.greengrasscoreipc
 import awsiot.greengrasscoreipc.client as client
 from awsiot.greengrasscoreipc.model import (
     IoTCoreMessage,
     QOS,
+    PublishToIoTCoreRequest,
     SubscribeToIoTCoreRequest
 )
 
@@ -15,7 +16,6 @@ TIMEOUT = 10
 
 ipc_client = awsiot.greengrasscoreipc.connect()
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 
 class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
@@ -30,31 +30,60 @@ class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
             logging.error("Exception occurred", exc_info=True)
 
     def on_stream_error(self, error: Exception) -> bool:
-        # Handle error.
         logging.error(f"Stream error: {error}")
-        return True  # Return True to close stream, False to keep stream open.
+        return True
 
     def on_stream_closed(self) -> None:
-        # Handle close.
         logging.info("Stream closed")
-        pass
 
 
-topic = "devopstar/robocat/pet"
-qos = QOS.AT_MOST_ONCE
+def publish_message(topic: str, message: str):
+    request = PublishToIoTCoreRequest()
+    request.topic_name = topic
+    request.qos = QOS.AT_MOST_ONCE
+    request.payload = bytes(message, "utf-8")
 
-request = SubscribeToIoTCoreRequest()
-request.topic_name = topic
-request.qos = qos
-handler = StreamHandler()
-operation = ipc_client.new_subscribe_to_iot_core(handler)
-operation.activate(request)
-future_response = operation.get_response() 
-future_response.result(TIMEOUT)
+    operation = ipc_client.new_publish_to_iot_core()
+    operation.activate(request)
+    operation.get_response().result(TIMEOUT)
 
-# Keep the main thread alive, or the process will exit.
-while True:
-    time.sleep(10)
-                  
-# To stop subscribing, close the operation stream.
-operation.close()
+
+if __name__ == "__main__":
+    # args : enabled, frequency, sub_topic, pub_topic
+    if len(sys.argv) == 5:
+        if sys.argv[1].lower() == "true":
+            enabled = True
+        else:
+            enabled = False
+        frequency = float(sys.argv[2])
+        sub_topic = sys.argv[3]
+        pub_topic = sys.argv[4]
+
+        logging.info(f"enabled: {enabled}, frequency: {frequency}, sub_topic: {sub_topic}, pub_topic: {pub_topic}")
+
+        handler = StreamHandler()
+        request = SubscribeToIoTCoreRequest()
+        request.topic_name = sub_topic
+        request.qos = QOS.AT_MOST_ONCE
+        operation = ipc_client.new_subscribe_to_iot_core(handler)
+        operation.activate(request)
+        future_response = operation.get_response()
+        future_response.result(TIMEOUT)
+
+        message_count = 1
+
+        try:
+            while True:
+                time.sleep(frequency)
+                if enabled:
+                    message = json.dumps({
+                        "id": message_count,
+                        "timestamp": time.time()
+                    })
+                    publish_message(pub_topic, message)
+                    message_count += 1
+        except:
+            logging.error("Exception occurred", exc_info=True)
+            operation.close()
+    else:
+        logging.error(f'4 arguments required, only {len(sys.argv) - 1} provided.')

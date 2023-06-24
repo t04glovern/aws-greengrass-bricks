@@ -2,10 +2,14 @@
 RecipeFormatVersion: "2020-01-25"
 ComponentName: "{COMPONENT_NAME}"
 ComponentVersion: "{COMPONENT_VERSION}"
-ComponentDescription: AWS IoT Greengrass component to pet your robocat fleet via subscription
+ComponentDescription: AWS IoT Greengrass component to pet your robocat fleet via pub/sub
 ComponentPublisher: "{COMPONENT_AUTHOR}"
 ComponentConfiguration:
   DefaultConfiguration:
+    Enabled: "false"
+    Frequency: "1.0"
+    SubTopic: "devopstar/robocat/pet"
+    PubTopic: "devopstar/robocat/speak"
     accessControl:
       aws.greengrass.ipc.mqttproxy:
         com.devopstar.Robocat:mqttproxy:1:
@@ -14,6 +18,12 @@ ComponentConfiguration:
             - aws.greengrass#SubscribeToIoTCore
           resources:
             - devopstar/robocat/pet
+        com.devopstar.Robocat:mqttproxy:2:
+          policyDescription: Allows access to publish to devopstar/robocat/speak topic
+          operations:
+            - aws.greengrass#PublishToIoTCore
+          resources:
+            - devopstar/robocat/speak
 Manifests:
 - Name: Linux
   Platform:
@@ -32,4 +42,4 @@ Manifests:
     Run:
       RequiresPrivilege: false
       Script: |-
-        python3 {artifacts:decompressedPath}/greengrass-observability/src/robocat.py
+        python3 {artifacts:decompressedPath}/greengrass-observability/src/robocat.py "{configuration:/Enabled}" "{configuration:/Frequency}" "{configuration:/SubTopic}" "{configuration:/PubTopic}"
