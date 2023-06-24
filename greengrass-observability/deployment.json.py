@@ -1,5 +1,6 @@
 import json
 import os
+import boto3
 
 """
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
@@ -24,7 +25,15 @@ if not AWS_ACCOUNT_ID:
 
 LATEST_COMPONENT_VERSION = os.getenv('LATEST_COMPONENT_VERSION')
 if not LATEST_COMPONENT_VERSION:
-    raise ValueError("LATEST_COMPONENT_VERSION environment variable not set.")
+    print("LATEST_COMPONENT_VERSION environment variable not set. Fetching latest component version from AWS if possible.")
+
+
+def get_latest_component_version(component_name):
+    greengrassv2 = boto3.client('greengrassv2', region_name=AWS_REGION)
+    response = greengrassv2.list_component_versions(
+        arn=f"arn:aws:greengrass:{AWS_REGION}:{AWS_ACCOUNT_ID}:components:{component_name}"
+    )
+    return response['componentVersions'][0]['componentVersion']
 
 
 configuration = {
@@ -32,20 +41,20 @@ configuration = {
     "deploymentName": "Deployment for robocat group",
     "components": {
         "com.devopstar.Robocat": {
-            "componentVersion": LATEST_COMPONENT_VERSION,
+            "componentVersion": LATEST_COMPONENT_VERSION or get_latest_component_version("com.devopstar.Robocat"),
             "runWith": {},
             "configurationUpdate": {
                 "reset": [""]
             }
         },
         "aws.greengrass.Nucleus": {
-            "componentVersion": "2.10.1"
+            "componentVersion": "2.10.3"
         },
         "aws.greengrass.Cli": {
-            "componentVersion": "2.10.1"
+            "componentVersion": "2.10.3"
         },
         "aws.greengrass.clientdevices.mqtt.Bridge": {
-            "componentVersion": "2.2.5",
+            "componentVersion": "2.2.6",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "mqttTopicMapping": {
@@ -60,7 +69,7 @@ configuration = {
             "runWith": {}
         },
         "aws.greengrass.LogManager": {
-            "componentVersion": "2.3.3",
+            "componentVersion": "2.3.4",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "logsUploaderConfiguration": {

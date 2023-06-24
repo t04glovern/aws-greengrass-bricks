@@ -61,3 +61,15 @@ aws iam attach-role-policy \
     --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/GreengrassV2ComponentArtifactPolicy \
     --region ${AWS_REGION}
 ```
+
+## Cleanup Components
+
+```bash
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+export AWS_REGION="ap-southeast-2"
+
+./greengrass-component-cleanup.py \
+    --thing-group robocat \
+    --bucket-name greengrass-component-artifacts-${AWS_REGION}-${AWS_ACCOUNT_ID} \
+    --region ${AWS_REGION}
+```
