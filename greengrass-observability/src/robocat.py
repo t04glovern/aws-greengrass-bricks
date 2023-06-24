@@ -38,6 +38,7 @@ class StreamHandler(client.SubscribeToIoTCoreStreamHandler):
 
 
 def publish_message(topic: str, message: str):
+    logging.info(f"Publishing message to topic {topic}: {message}")
     request = PublishToIoTCoreRequest()
     request.topic_name = topic
     request.qos = QOS.AT_MOST_ONCE
