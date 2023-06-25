@@ -101,11 +101,6 @@ configuration = {
         },
         "aws.greengrass.LocalDebugConsole": {
             "componentVersion": "2.3.0",
-            "configurationUpdate": {
-                "merge": json.dumps({
-                    "httpsEnabled": "false"
-                })
-            },
             "runWith": {}
         }
     },
