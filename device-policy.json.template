@@ -26,6 +26,19 @@
       "Resource": [
         "arn:aws:ecr:$AWS_REGION:$AWS_ACCOUNT_ID:repository/robocatcontainer"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": [
+        "arn:aws:logs:$AWS_REGION:$AWS_ACCOUNT_ID:log-group:/aws/greengrass/GreengrassSystemComponent/$AWS_REGION/System:log-stream:*/thing/robocat*",
+        "arn:aws:logs:$AWS_REGION:$AWS_ACCOUNT_ID:log-group:/aws/greengrass/UserComponent/$AWS_REGION/*:log-stream:*/thing/robocat*"
+      ]
     }
   ]
 }

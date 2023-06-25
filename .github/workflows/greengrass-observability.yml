@@ -1,0 +1,115 @@
+name: Greengrass Component Deploy - greengrass-observability
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - greengrass-observability/**
+      - .github/workflows/greengrass-observability.yml
+  pull_request:
+    paths:
+      - greengrass-observability/**
+      - .github/workflows/greengrass-observability.yml
+
+env:
+  GREENGRASS_COMPONENT_NAME: com.devopstar.Robocat
+  GREENGRASS_REGION: ap-southeast-2
+  GREENGRASS_DEV_KIT_VERSION: v1.2.3
+  working-directory: ./greengrass-observability
+
+jobs:
+  publish:
+    name: Component publish
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      published_version: ${{ steps.gdk_version.outputs.version }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.OIDC_ROLE_AWS_ROLE_TO_ASSUME }}
+        aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
+
+    - name: Install Greengrass Development Kit
+      run: pip install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@${{ env.GREENGRASS_DEV_KIT_VERSION }}
+
+    - name: GDK Build
+      run: gdk component build
+      working-directory: ${{ env.working-directory }}
+      env:
+        AWS_REGION: ${{ env.GREENGRASS_REGION }}
+
+    - name: GDK Publish
+      run: gdk component publish
+      working-directory: ${{ env.working-directory }}
+
+    - name: Get published version
+      id: gdk_version
+      run: |
+        export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+        export AWS_REGION=${GREENGRASS_REGION}
+        export LATEST_COMPONENT_VERSION=$(aws greengrassv2 list-component-versions \
+          --output text \
+          --no-paginate \
+          --arn arn:aws:greengrass:${AWS_REGION}:${AWS_ACCOUNT_ID}:components:${GREENGRASS_COMPONENT_NAME} \
+          --query 'componentVersions[0].componentVersion')
+
+        echo "version=${LATEST_COMPONENT_VERSION}" >> $GITHUB_OUTPUT
+
+  deploy:
+    name: Component deploy
+    runs-on: ubuntu-latest
+    needs: publish
+    permissions:
+      id-token: write
+      pull-requests: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.OIDC_ROLE_AWS_ROLE_TO_ASSUME }}
+        aws-region: ${{ secrets.OIDC_ROLE_AWS_REGION }}
+
+    - name: Install Dev Requirements
+      run: pip install -r requirements-dev.txt
+      working-directory: ${{ env.working-directory }}
+
+    - name: Deploy Greengrass component
+      id: deploy
+      run: |
+        export AWS_ACCOUNT_ID=$(aws sts get-caller-identity |  jq -r '.Account')
+        export AWS_REGION=${GREENGRASS_REGION}
+        python deployment.json.py
+        DEPLOYMENT_ID=$(aws greengrassv2 create-deployment \
+          --output text \
+          --no-paginate \
+          --region ${AWS_REGION} \
+          --cli-input-json file://deployment.json \
+          --query 'deploymentId')
+
+        echo "deployment_id=${DEPLOYMENT_ID}" >> $GITHUB_OUTPUT
+      env:
+        LATEST_COMPONENT_VERSION: ${{ needs.publish.outputs.published_version }}
+      working-directory: ${{ env.working-directory }}

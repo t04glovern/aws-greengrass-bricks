@@ -80,7 +80,7 @@ for component in components:
 
         # Check if this component version is not the latest version in use
         if component_version_number != latest_component_version:
-            
+
             # Delete the component version in the S3 bucket
             s3_bucket = s3_resource.Bucket(s3_bucket_name)
             s3_bucket.objects.filter(Prefix=component_version_key).delete()
