@@ -198,3 +198,110 @@ Resources:
           - Id: 'Expire-Data-After-7-Days'
             Status: 'Enabled'
             ExpirationInDays: 1
+
+  GrafanaAssumeRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - Sid: "AWSManagedGrafanaCanAssumeThisRole"
+            Effect: Allow
+            Principal:
+              Service:
+                - "grafana.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+              ArnLike:
+                aws:SourceArn: 
+                  - !Sub 'arn:aws:grafana:${AWS::Region}:${AWS::AccountId}:/workspaces/*'
+      Path: "/"
+  
+  GrafanaAthenaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub 'batch-uploader-${Name}-athena-policy'
+      Roles:
+        - !Ref GrafanaAssumeRole
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement:
+          - Sid: "AllowGrafanaQueryOutputAthena"
+            Effect: Allow
+            Action: 
+              - s3:GetBucketLocation
+              - s3:GetObject
+              - s3:ListBucket
+              - s3:ListBucketMultipartUploads
+              - s3:ListMultipartUploadParts
+              - s3:AbortMultipartUpload
+              - s3:CreateBucket
+              - s3:PutObject
+            Resource: 
+              - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}'
+              - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}/*'
+          - Sid: "AllowIcebergData"
+            Effect: Allow
+            Action: 
+              - s3:GetObject
+              - s3:ListBucket
+            Resource: 
+              - !Sub 'arn:aws:s3:::${IcebergBucketName}'
+              - !Sub 'arn:aws:s3:::${IcebergBucketName}/*'
+          - Sid: "AllowGrafanaToListAthena"
+            Effect: Allow
+            Action: 
+              - "athena:ListDataCatalogs"
+              - "athena:ListWorkGroups"
+            Resource: "*"
+          - Sid: "AllowGrafanaToGetAthenaDataCatalog"
+            Effect: Allow
+            Action: 
+              - "athena:GetDatabase"
+              - "athena:GetDataCatalog"
+              - "athena:GetTableMetadata"
+              - "athena:ListDatabases"
+              - "athena:ListTableMetadata"
+            Resource: 
+              - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/AwsDataCatalog'
+          - Sid: "AllowGrafanaToQueryAthena"
+            Effect: Allow
+            Action: 
+              - "athena:GetQueryExecution"
+              - "athena:GetQueryResults"
+              - "athena:GetWorkGroup"
+              - "athena:StartQueryExecution"
+              - "athena:StopQueryExecution"
+            Resource: 
+              - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/*'
+          - Sid: "AllowGrafanaToAccessGlue"
+            Effect: Allow
+            Action: 
+              - "glue:GetDatabase"
+              - "glue:GetDatabases"
+              - "glue:GetTable"
+              - "glue:GetTables"
+              - "glue:GetPartition"
+              - "glue:GetPartitions"
+              - "glue:GetTableVersion"
+              - "glue:GetTableVersions"
+            Resource: 
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/*'
+
+  GrafanaWorkspace:
+    Type: 'AWS::Grafana::Workspace'
+    Properties:
+      AccountAccessType: CURRENT_ACCOUNT
+      AuthenticationProviders:
+        - AWS_SSO
+      PermissionType: SERVICE_MANAGED
+      RoleArn: !GetAtt GrafanaAssumeRole.Arn
+      DataSources:
+        - ATHENA
+      Name: !Sub 'batch-uploader-${Name}'
+      Description: !Sub 'batch-uploader-${Name}'
