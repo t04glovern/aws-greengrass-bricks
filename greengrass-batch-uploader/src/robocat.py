@@ -5,7 +5,7 @@ import random
 import json
 import sys
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from greengrasssdk.stream_manager import (
     StreamManagerClient,
@@ -33,10 +33,10 @@ def generate_random_json(id, speed, temperature, location):
 
     location['lat'] += random.uniform(-0.001, 0.001)
     location['lng'] += random.uniform(-0.001, 0.001)
-    
+
     return json.dumps({
         "id": id,
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "speed": speed,
         "temperature": temperature,
         "location": location
