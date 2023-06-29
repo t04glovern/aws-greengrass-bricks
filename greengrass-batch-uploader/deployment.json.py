@@ -46,7 +46,7 @@ configuration = {
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Enabled": "false",
-                    "Frequency": "1.0"
+                    "Frequency": "0.1"
                 })
             }
         },
@@ -54,17 +54,17 @@ configuration = {
             "componentVersion": "2.1.8",
         },
         "com.devopstar.json.gzip": {
-            "componentVersion": "1.0.8",
+            "componentVersion": "1.0.0",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Processor": {
                         "StreamName": "BatchMessageStream",
-                        "BatchSize": "20",
-                        "Interval": "30",
+                        "BatchSize": "100",
+                        "Interval": "10",
                         "Path": "/tmp/greengrass/gzip"
                     },
                     "Uploader": {
-                        "BucketName": "greengrass-stream-manager-gzip-ap-southeast-2-536829251200",
+                        "BucketName": "batch-uploader-robocat-greengrass-landing",
                         "Interval": "10",
                         "Path": "/tmp/greengrass/gzip/*"
                     },

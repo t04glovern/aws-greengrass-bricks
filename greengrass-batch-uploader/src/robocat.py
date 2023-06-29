@@ -23,10 +23,17 @@ location = {'lat': -31.976056, 'lng': 115.9113084}
 
 
 def generate_random_json(id, speed, temperature, location):
-    speed += random.randint(-5, 5)
+    # Ensure speed does not go below 0
+    speed += random.randint(0, 5)
+    speed = max(0, speed)
+
+    # Ensure temperature stays between -10 and 60 degrees
     temperature = round(temperature + random.uniform(-0.5, 0.5), 2)
-    location['lat'] += random.uniform(-0.0001, 0.0001)
-    location['lng'] += random.uniform(-0.0001, 0.0001)
+    temperature = max(-10, min(60, temperature))
+
+    location['lat'] += random.uniform(-0.001, 0.001)
+    location['lng'] += random.uniform(-0.001, 0.001)
+    
     return json.dumps({
         "id": id,
         "timestamp": datetime.now().isoformat(),

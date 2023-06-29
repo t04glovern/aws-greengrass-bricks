@@ -30,12 +30,25 @@
     {
       "Effect": "Allow",
       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": [
+        "arn:aws:logs:$AWS_REGION:$AWS_ACCOUNT_ID:log-group:/aws/greengrass/GreengrassSystemComponent/$AWS_REGION/System:log-stream:*/thing/robocat*",
+        "arn:aws:logs:$AWS_REGION:$AWS_ACCOUNT_ID:log-group:/aws/greengrass/UserComponent/$AWS_REGION/*:log-stream:*/thing/robocat*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "s3:PutObject",
         "s3:AbortMultipartUpload",
         "s3:ListMultipartUploadParts"
       ],
       "Resource": [
-        "arn:aws:s3:::greengrass-stream-manager-gzip-$AWS_REGION-$AWS_ACCOUNT_ID/*"
+        "arn:aws:s3:::batch-uploader-robocat-greengrass-landing/*"
       ]
     }
   ]
