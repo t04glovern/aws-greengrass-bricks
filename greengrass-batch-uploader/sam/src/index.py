@@ -105,7 +105,7 @@ def handler(event: SQSEvent, context: LambdaContext):
                 `location` struct<lat:float, lng:float>
             )
             ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
-            WITH SERDEPROPERTIES ( "timestamp.formats"="yyyy-MM-dd'T'HH:mm:ss.SSSSSS" )
+            WITH SERDEPROPERTIES ( "timestamp.formats"="yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZ" )
             LOCATION 's3://{ATHENA_TMP_S3_BUCKET}/{ATHENA_TMP_TABLE_PREFIX}'
             TBLPROPERTIES ('has_encrypted_data'='false')
             """)
