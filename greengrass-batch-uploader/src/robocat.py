@@ -24,7 +24,7 @@ location = {'lat': -31.976056, 'lng': 115.9113084}
 
 def generate_random_json(id, speed, temperature, location):
     # Ensure speed does not go below 0
-    speed += random.randint(0, 5)
+    speed = round(speed + random.uniform(-0.5, 0.5), 2)
     speed = max(0, min(150, speed))
 
     # Ensure temperature stays between -10 and 60 degrees

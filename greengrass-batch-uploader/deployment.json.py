@@ -46,7 +46,7 @@ configuration = {
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Enabled": "true",
-                    "Frequency": "0.1"
+                    "Frequency": "1.0"
                 })
             }
         },
