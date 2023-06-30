@@ -45,13 +45,10 @@ configuration = {
             "runWith": {},
             "configurationUpdate": {
                 "merge": json.dumps({
-                    "Enabled": "false",
+                    "Enabled": "true",
                     "Frequency": "0.1"
                 })
             }
-        },
-        "aws.greengrass.StreamManager": {
-            "componentVersion": "2.1.8",
         },
         "com.devopstar.json.gzip": {
             "componentVersion": "1.0.0",
@@ -73,14 +70,46 @@ configuration = {
             },
             "runWith": {}
         },
+        "aws.greengrass.LogManager": {
+            "componentVersion": "2.3.5",
+            "configurationUpdate": {
+                "merge": json.dumps({
+                    "logsUploaderConfiguration": {
+                        "systemLogsConfiguration": {
+                            "uploadToCloudWatch": "true",
+                            "minimumLogLevel": "INFO",
+                            "diskSpaceLimit": "10",
+                            "diskSpaceLimitUnit": "MB",
+                            "deleteLogFileAfterCloudUpload": "false"
+                        },
+                        "componentLogsConfigurationMap": {
+                            "com.devopstar.Robocat": {
+                                "minimumLogLevel": "INFO",
+                                "diskSpaceLimit": "20",
+                                "diskSpaceLimitUnit": "MB",
+                                "deleteLogFileAfterCloudUpload": "false"
+                            },
+                            "com.devopstar.json.gzip": {
+                                "minimumLogLevel": "INFO",
+                                "diskSpaceLimit": "20",
+                                "diskSpaceLimitUnit": "MB",
+                                "deleteLogFileAfterCloudUpload": "false"
+                            }
+                        }
+                    },
+                    "periodicUploadIntervalSec": 300
+                })
+            },
+            "runWith": {}
+        },
         "aws.greengrass.Nucleus": {
-            "componentVersion": "2.10.2"
+            "componentVersion": "2.11.0"
         },
         "aws.greengrass.Cli": {
-            "componentVersion": "2.10.2"
+            "componentVersion": "2.11.0"
         },
         "aws.greengrass.LocalDebugConsole": {
-            "componentVersion": "2.3.0",
+            "componentVersion": "2.3.1",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "httpsEnabled": "false"
