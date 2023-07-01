@@ -11,21 +11,30 @@ event_logger = Logger()
 ATHENA_DATABASE = os.environ.get('ATHENA_DATABASE', 'default')
 ATHENA_TABLE = os.environ.get('ATHENA_TABLE')
 ATHENA_WORKGROUP = os.environ.get('ATHENA_WORKGROUP', 'primary')
+ATHENA_QUERY_OUTPUT_BUCKET = os.environ.get('ATHENA_QUERY_OUTPUT_BUCKET', None)
 
-athena = boto3.client('athena')
 
-
-def run_athena_query(query):
+def run_athena_query(query, query_output_bucket=None):
     athena_client = boto3.client('athena')
 
     try:
         event_logger.info(f"Executing query: {query}")
 
-        query_start_response = athena_client.start_query_execution(
-            QueryString=query,
-            QueryExecutionContext={"Database": ATHENA_DATABASE},
-            WorkGroup=ATHENA_WORKGROUP,
-        )
+        if query_output_bucket:
+            query_start_response = athena_client.start_query_execution(
+                QueryString=query,
+                QueryExecutionContext={"Database": ATHENA_DATABASE},
+                ResultConfiguration={
+                    "OutputLocation": f"s3://{query_output_bucket}/",
+                },
+                WorkGroup=ATHENA_WORKGROUP,
+            )
+        else:
+            query_start_response = athena_client.start_query_execution(
+                QueryString=query,
+                QueryExecutionContext={"Database": ATHENA_DATABASE},
+                WorkGroup=ATHENA_WORKGROUP,
+            )
 
         query_execution_id = query_start_response["QueryExecutionId"]
 
@@ -62,9 +71,9 @@ def handler(event: EventBridgeEvent, context: LambdaContext):
         rule_arn = event["resources"][0]
 
         if rule_arn.endswith("-maintenance-vacuum"):
-            run_athena_query(f"VACUUM {ATHENA_DATABASE}.{ATHENA_TABLE};")
+            run_athena_query(f"VACUUM {ATHENA_DATABASE}.{ATHENA_TABLE};", query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
         elif rule_arn.endswith("-maintenance-optimize"):
-            run_athena_query(f"OPTIMIZE {ATHENA_DATABASE}.{ATHENA_TABLE} REWRITE DATA USING BIN_PACK;")
+            run_athena_query(f"OPTIMIZE {ATHENA_DATABASE}.{ATHENA_TABLE} REWRITE DATA USING BIN_PACK;", query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
         else:
             event_logger.info("No matching rule suffix found. Make sure the rule ARN ends with '-maintenance-optimize' or '-maintenance-vacuum'.")
     except Exception as e:

@@ -5,14 +5,70 @@ Description: S3 event processor
 Parameters:
   Name:
     Type: String
-  IcebergBucketName:
-    Type: String
   IcebergTableName:
-    Type: String
-  AthenaQueryOutputBucketName:
     Type: String
 
 Resources:
+  AthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Ref Name
+      Description: !Sub 'Workgroup for ${Name}'
+      State: ENABLED
+      WorkGroupConfiguration:
+        EnforceWorkGroupConfiguration: true
+        ResultConfiguration:
+          OutputLocation: !Sub 's3://${AthenaOutputBucket}/'
+
+  IcebergBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-iceberg'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  AthenaOutputBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-athena-queries'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'Expire-Data-After-1-Day'
+            Status: 'Enabled'
+            ExpirationInDays: 1
+
+  BatchBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-scratch'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'Expire-Data-After-1-Day'
+            Status: 'Enabled'
+            ExpirationInDays: 1
+
   LandingBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -131,8 +187,8 @@ Resources:
               Resource: 
                 - !Sub 'arn:aws:s3:::${BatchBucket}'
                 - !Sub 'arn:aws:s3:::${BatchBucket}/*'
-                - !Sub 'arn:aws:s3:::${IcebergBucketName}'
-                - !Sub 'arn:aws:s3:::${IcebergBucketName}/*'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
             - Effect: Allow
               Action: 
                 - s3:GetBucketLocation
@@ -144,8 +200,8 @@ Resources:
                 - s3:CreateBucket
                 - s3:PutObject
               Resource: 
-                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}'
-                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}/*'
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
             - Effect: Allow
               Action: 
                 - athena:StartQueryExecution
@@ -153,7 +209,7 @@ Resources:
                 - athena:GetQueryExecution
                 - athena:GetDataCatalog
               Resource:
-                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/primary'
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
                 - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
             - Effect: Allow
               Action: 
@@ -173,6 +229,8 @@ Resources:
       Environment:
         Variables:
           ATHENA_TABLE: !Ref IcebergTableName
+          ATHENA_WORKGROUP: !Ref AthenaWorkGroup
+          ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
           BATCH_BUCKET_NAME: !Ref BatchBucket
       Events:
         S3PutObjectEvent:
@@ -205,8 +263,8 @@ Resources:
                 - s3:DeleteObject
                 - s3:ListBucket
               Resource:
-                - !Sub 'arn:aws:s3:::${IcebergBucketName}'
-                - !Sub 'arn:aws:s3:::${IcebergBucketName}/*'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
             - Effect: Allow
               Action: 
                 - s3:GetBucketLocation
@@ -218,8 +276,8 @@ Resources:
                 - s3:CreateBucket
                 - s3:PutObject
               Resource: 
-                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}'
-                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}/*'
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
             - Effect: Allow
               Action: 
                 - athena:StartQueryExecution
@@ -227,7 +285,7 @@ Resources:
                 - athena:GetQueryExecution
                 - athena:GetDataCatalog
               Resource:
-                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/primary'
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
                 - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
             - Effect: Allow
               Action: 
@@ -247,6 +305,8 @@ Resources:
       Environment:
         Variables:
           ATHENA_TABLE: !Ref IcebergTableName
+          ATHENA_WORKGROUP: !Ref AthenaWorkGroup
+          ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
       Events:
         VacuumEvent:
           Type: Schedule
@@ -258,24 +318,6 @@ Resources:
           Properties:
             Name: !Sub 'batch-uploader-${Name}-maintenance-optimize'
             Schedule: rate(2 days)
-
-  BatchBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub 'batch-uploader-${Name}-scratch'
-      OwnershipControls:
-        Rules:
-          - ObjectOwnership: BucketOwnerEnforced
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      LifecycleConfiguration:
-        Rules:
-          - Id: 'Expire-Data-After-1-Day'
-            Status: 'Enabled'
-            ExpirationInDays: 1
 
   GrafanaAssumeRole:
     Type: AWS::IAM::Role
@@ -319,16 +361,16 @@ Resources:
               - s3:CreateBucket
               - s3:PutObject
             Resource: 
-              - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}'
-              - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}/*'
+              - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
+              - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
           - Sid: "AllowIcebergData"
             Effect: Allow
             Action: 
               - s3:GetObject
               - s3:ListBucket
             Resource: 
-              - !Sub 'arn:aws:s3:::${IcebergBucketName}'
-              - !Sub 'arn:aws:s3:::${IcebergBucketName}/*'
+              - !Sub 'arn:aws:s3:::${IcebergBucket}'
+              - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
           - Sid: "AllowGrafanaToListAthena"
             Effect: Allow
             Action: 
@@ -379,7 +421,14 @@ Resources:
         - AWS_SSO
       PermissionType: SERVICE_MANAGED
       RoleArn: !GetAtt GrafanaAssumeRole.Arn
-      DataSources:
-        - ATHENA
       Name: !Sub 'batch-uploader-${Name}'
       Description: !Sub 'batch-uploader-${Name}'
+
+Outputs:
+  LandingBucket:
+    Description: The S3 bucket where data can be uploaded for processing
+    Value: !Ref LandingBucket
+
+  AthenaOutputBucket:
+    Description: The S3 bucket where Athena query results should be stored
+    Value: !Ref AthenaOutputBucket

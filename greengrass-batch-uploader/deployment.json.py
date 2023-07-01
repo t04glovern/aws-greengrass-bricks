@@ -45,7 +45,7 @@ configuration = {
             "runWith": {},
             "configurationUpdate": {
                 "merge": json.dumps({
-                    "Enabled": "false",
+                    "Enabled": "true",
                     "Frequency": "1.0"
                 })
             }

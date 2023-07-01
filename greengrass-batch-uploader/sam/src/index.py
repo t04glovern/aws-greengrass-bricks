@@ -12,20 +12,48 @@ event_logger = Logger()
 ATHENA_DATABASE = os.environ.get('ATHENA_DATABASE', 'default')
 ATHENA_TABLE = os.environ.get('ATHENA_TABLE')
 ATHENA_WORKGROUP = os.environ.get('ATHENA_WORKGROUP', 'primary')
+ATHENA_QUERY_OUTPUT_BUCKET = os.environ.get('ATHENA_QUERY_OUTPUT_BUCKET', None)
+
 BATCH_BUCKET_NAME = os.environ.get('BATCH_BUCKET_NAME')
+ICEBERG_BUCKET_NAME = os.environ.get('ICEBERG_BUCKET_NAME')
 
 
-def run_athena_query(query):
+def check_table_exists(table, database):
+    glue_client = boto3.client('glue')
+
+    try:
+        response = glue_client.get_table(
+            DatabaseName=database,
+            Name=table
+        )
+        event_logger.info(f"Table: {response['Table']['Name']} found in {response['Table']['DatabaseName']}")
+        return True
+    except glue_client.exceptions.EntityNotFoundException:
+        event_logger.info(f"Table: {table} not found")
+        return False
+
+
+def run_athena_query(query, query_output_bucket=None):
     athena_client = boto3.client('athena')
 
     try:
         event_logger.info(f"Executing query: {query}")
 
-        query_start_response = athena_client.start_query_execution(
-            QueryString=query,
-            QueryExecutionContext={"Database": ATHENA_DATABASE},
-            WorkGroup=ATHENA_WORKGROUP,
-        )
+        if query_output_bucket:
+            query_start_response = athena_client.start_query_execution(
+                QueryString=query,
+                QueryExecutionContext={"Database": ATHENA_DATABASE},
+                ResultConfiguration={
+                    "OutputLocation": f"s3://{query_output_bucket}/",
+                },
+                WorkGroup=ATHENA_WORKGROUP,
+            )
+        else:
+            query_start_response = athena_client.start_query_execution(
+                QueryString=query,
+                QueryExecutionContext={"Database": ATHENA_DATABASE},
+                WorkGroup=ATHENA_WORKGROUP,
+            )
 
         query_execution_id = query_start_response["QueryExecutionId"]
 
@@ -73,6 +101,27 @@ def transfer_s3_file(src_bucket, src_key, dest_bucket, dest_key):
 @event_logger.inject_lambda_context
 @event_source(data_class=SQSEvent)
 def handler(event: SQSEvent, context: LambdaContext):
+    if not check_table_exists(table=ATHENA_TABLE, database=ATHENA_DATABASE):
+        # Create Iceberg Table
+        run_athena_query(f"""
+        CREATE TABLE IF NOT EXISTS {ATHENA_DATABASE}.{ATHENA_TABLE} (
+            `id` string,
+            `timestamp` timestamp,
+            `speed` int,
+            `temperature` float,
+            `location` struct<lat:float, lng:float>
+        )
+        PARTITIONED BY (hour(`timestamp`))
+        LOCATION 's3://{ICEBERG_BUCKET_NAME}/'
+        TBLPROPERTIES (
+            'table_type'='ICEBERG',
+            'format'='parquet',
+            'write_compression'='gzip',
+            'vacuum_min_snapshots_to_keep'='5',
+            'vacuum_max_snapshot_age_seconds'='86400'
+        );
+        """, query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
+
     for record in event.records:
         try:
             msg = json.loads(record.body)
@@ -108,21 +157,21 @@ def handler(event: SQSEvent, context: LambdaContext):
             WITH SERDEPROPERTIES ( "timestamp.formats"="yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZ" )
             LOCATION 's3://{ATHENA_TMP_S3_BUCKET}/{ATHENA_TMP_TABLE_PREFIX}'
             TBLPROPERTIES ('has_encrypted_data'='false')
-            """)
+            """, query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
 
             # Insert into Main Table
             run_athena_query(
-                f"INSERT INTO {ATHENA_DATABASE}.{ATHENA_TABLE} SELECT * FROM {ATHENA_DATABASE}.{ATHENA_TMP_TABLE};")
+                f"INSERT INTO {ATHENA_DATABASE}.{ATHENA_TABLE} SELECT * FROM {ATHENA_DATABASE}.{ATHENA_TMP_TABLE};", query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
 
             # Drop Temporary Table
             run_athena_query(
-                f"DROP TABLE {ATHENA_DATABASE}.{ATHENA_TMP_TABLE};")
+                f"DROP TABLE {ATHENA_DATABASE}.{ATHENA_TMP_TABLE};", query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
 
         except Exception as err:
             event_logger.exception(f"Error processing record: {err}")
             try:
                 run_athena_query(
-                    f"DROP TABLE {ATHENA_DATABASE}.{ATHENA_TMP_TABLE};")
+                    f"DROP TABLE {ATHENA_DATABASE}.{ATHENA_TMP_TABLE};", query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
             except Exception as e:
                 event_logger.exception(f"Error dropping temporary table: {e}")
                 raise e
