@@ -181,6 +181,84 @@ Resources:
             Queue: !GetAtt LandingQueue.Arn
             BatchSize: 1
 
+  MaintenanceArrivalEventProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'batch-uploader-${Name}-maintenance'
+      Handler: maintenance.handler
+      Timeout: 180
+      Runtime: python3.10
+      CodeUri: ./src
+      Policies: 
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}-maintenance*'
+            - Effect: Allow
+              Action: 
+                - s3:GetObject
+                - s3:PutObject
+                - s3:DeleteObject
+                - s3:ListBucket
+              Resource:
+                - !Sub 'arn:aws:s3:::${IcebergBucketName}'
+                - !Sub 'arn:aws:s3:::${IcebergBucketName}/*'
+            - Effect: Allow
+              Action: 
+                - s3:GetBucketLocation
+                - s3:GetObject
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:CreateBucket
+                - s3:PutObject
+              Resource: 
+                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}'
+                - !Sub 'arn:aws:s3:::${AthenaQueryOutputBucketName}/*'
+            - Effect: Allow
+              Action: 
+                - athena:StartQueryExecution
+                - athena:StopQueryExecution
+                - athena:GetQueryExecution
+                - athena:GetDataCatalog
+              Resource:
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/primary'
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
+            - Effect: Allow
+              Action: 
+                - glue:GetDatabase*
+                - glue:CreateTable
+                - glue:UpdateTable
+                - glue:GetTable
+                - glue:GetTables
+                - glue:DeleteTable
+                - glue:BatchDeleteTable
+                - glue:GetPartition*
+                - glue:BatchGetPartition
+              Resource:
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/${IcebergTableName}*'
+      Environment:
+        Variables:
+          ATHENA_TABLE: !Ref IcebergTableName
+      Events:
+        VacuumEvent:
+          Type: Schedule
+          Properties:
+            Name: !Sub 'batch-uploader-${Name}-maintenance-vacuum'
+            Schedule: rate(1 day) 
+        OptimizeEvent:
+          Type: Schedule
+          Properties:
+            Name: !Sub 'batch-uploader-${Name}-maintenance-optimize'
+            Schedule: rate(2 days)
+
   BatchBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -195,7 +273,7 @@ Resources:
         RestrictPublicBuckets: true
       LifecycleConfiguration:
         Rules:
-          - Id: 'Expire-Data-After-7-Days'
+          - Id: 'Expire-Data-After-1-Day'
             Status: 'Enabled'
             ExpirationInDays: 1
 
