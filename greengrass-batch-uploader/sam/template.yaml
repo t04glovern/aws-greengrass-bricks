@@ -232,6 +232,7 @@ Resources:
           ATHENA_WORKGROUP: !Ref AthenaWorkGroup
           ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
           BATCH_BUCKET_NAME: !Ref BatchBucket
+          ICEBERG_BUCKET_NAME: !Ref IcebergBucket
       Events:
         S3PutObjectEvent:
           Type: SQS
