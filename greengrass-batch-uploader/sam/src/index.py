@@ -115,10 +115,7 @@ def handler(event: SQSEvent, context: LambdaContext):
         LOCATION 's3://{ICEBERG_BUCKET_NAME}/'
         TBLPROPERTIES (
             'table_type'='ICEBERG',
-            'format'='parquet',
-            'write_compression'='gzip',
-            'vacuum_min_snapshots_to_keep'='5',
-            'vacuum_max_snapshot_age_seconds'='86400'
+            'format'='parquet'
         );
         """, query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
 
@@ -156,7 +153,6 @@ def handler(event: SQSEvent, context: LambdaContext):
             ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
             WITH SERDEPROPERTIES ( "timestamp.formats"="yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZ" )
             LOCATION 's3://{ATHENA_TMP_S3_BUCKET}/{ATHENA_TMP_TABLE_PREFIX}'
-            TBLPROPERTIES ('has_encrypted_data'='false')
             """, query_output_bucket=ATHENA_QUERY_OUTPUT_BUCKET)
 
             # Insert into Main Table
