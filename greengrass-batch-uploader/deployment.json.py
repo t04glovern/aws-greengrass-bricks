@@ -51,7 +51,7 @@ configuration = {
             }
         },
         "com.devopstar.json.gzip": {
-            "componentVersion": "1.0.0",
+            "componentVersion": "1.0.1",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Processor": {
@@ -62,6 +62,7 @@ configuration = {
                     },
                     "Uploader": {
                         "BucketName": "batch-uploader-robocat-greengrass-landing",
+                        "Prefix": "robocat",
                         "Interval": "10",
                         "Path": "/tmp/greengrass/gzip/*"
                     },

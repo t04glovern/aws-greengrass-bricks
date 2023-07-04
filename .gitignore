@@ -6,3 +6,6 @@ deployment.json
 greengrass-build/
 zip-build/
 custom-build/
+
+# greengrass-batch-uploader
+greengrass-batch-uploader/aws-greengrass-json-gzip

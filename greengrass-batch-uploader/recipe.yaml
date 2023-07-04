@@ -10,7 +10,7 @@ ComponentDependencies:
     DependencyType: "HARD"
 ComponentConfiguration:
   DefaultConfiguration:
-    Enabled: "false"
+    Enabled: "true"
     Frequency: "1.0"
 Manifests:
 - Name: Linux
