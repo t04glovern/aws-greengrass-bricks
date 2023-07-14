@@ -1,0 +1,435 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: S3 event processor
+
+Parameters:
+  Name:
+    Type: String
+  IcebergTableName:
+    Type: String
+
+Resources:
+  AthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Ref Name
+      Description: !Sub 'Workgroup for ${Name}'
+      State: ENABLED
+      WorkGroupConfiguration:
+        EnforceWorkGroupConfiguration: true
+        ResultConfiguration:
+          OutputLocation: !Sub 's3://${AthenaOutputBucket}/'
+
+  IcebergBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-iceberg'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  AthenaOutputBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-athena-queries'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'Expire-Data-After-1-Day'
+            Status: 'Enabled'
+            ExpirationInDays: 1
+
+  BatchBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-scratch'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'Expire-Data-After-1-Day'
+            Status: 'Enabled'
+            ExpirationInDays: 1
+
+  LandingBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'batch-uploader-${Name}-landing'
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      NotificationConfiguration:
+        EventBridgeConfiguration:
+          EventBridgeEnabled: true
+
+  LandingQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub 'batch-uploader-${Name}-landing'
+      SqsManagedSseEnabled: true
+      VisibilityTimeout: 120
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt LandingDLQ.Arn
+        maxReceiveCount: 1
+
+  LandingQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues: 
+        - !Ref LandingQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: 'AllowSendMessageToSqs'
+        Statement:
+          - Sid: 'AllowEventBridgeToSendMessages'
+            Effect: 'Allow'
+            Principal:
+              Service: 'events.amazonaws.com'
+            Action: 'sqs:SendMessage'
+            Resource: !GetAtt LandingQueue.Arn
+            Condition:
+              ArnEquals:
+                'aws:SourceArn': !GetAtt S3PutObjectEvent.Arn
+
+  LandingDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub 'batch-uploader-${Name}-landing-dlq'
+      SqsManagedSseEnabled: true
+
+  LandingDLQPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref LandingDLQ
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: 'AllowSendMessageToDlq'
+        Statement:
+          - Sid: 'AllowSqsToSendToDlq'
+            Effect: 'Allow'
+            Principal:
+              Service: 'sqs.amazonaws.com'
+            Action: 'sqs:SendMessage'
+            Resource: !GetAtt LandingQueue.Arn
+
+  S3PutObjectEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub 'batch-uploader-${Name}'
+      Description: !Sub 'Capture S3 PutObject events for ${LandingBucket}'
+      State: ENABLED
+      EventPattern:
+        source:
+          - 'aws.s3'
+        detail-type:
+          - 'Object Created'
+        detail:
+          bucket:
+            name:
+              - !Ref LandingBucket
+      Targets:
+        - Arn: !GetAtt LandingQueue.Arn
+          Id: 'sqsTargetId'
+          DeadLetterConfig:
+            Arn: !GetAtt LandingDLQ.Arn
+
+  BatchEventProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'batch-uploader-${Name}'
+      Handler: index.handler
+      Timeout: 90
+      Runtime: python3.10
+      CodeUri: ./src
+      Policies: 
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}*'
+            - Effect: Allow
+              Action: 
+                - s3:GetObject
+              Resource: !Sub 'arn:aws:s3:::${LandingBucket}/*'
+            - Effect: Allow
+              Action: 
+                - s3:GetObject
+                - s3:PutObject
+                - s3:DeleteObject
+                - s3:ListBucket
+              Resource: 
+                - !Sub 'arn:aws:s3:::${BatchBucket}'
+                - !Sub 'arn:aws:s3:::${BatchBucket}/*'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
+            - Effect: Allow
+              Action: 
+                - s3:GetBucketLocation
+                - s3:GetObject
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:CreateBucket
+                - s3:PutObject
+              Resource: 
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
+            - Effect: Allow
+              Action: 
+                - athena:StartQueryExecution
+                - athena:StopQueryExecution
+                - athena:GetQueryExecution
+                - athena:GetDataCatalog
+              Resource:
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
+            - Effect: Allow
+              Action: 
+                - glue:GetDatabase*
+                - glue:CreateTable
+                - glue:UpdateTable
+                - glue:GetTable
+                - glue:GetTables
+                - glue:DeleteTable
+                - glue:BatchDeleteTable
+                - glue:GetPartition*
+                - glue:BatchGetPartition
+              Resource:
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/${IcebergTableName}*'
+      Environment:
+        Variables:
+          ATHENA_TABLE: !Ref IcebergTableName
+          ATHENA_WORKGROUP: !Ref AthenaWorkGroup
+          ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
+          BATCH_BUCKET_NAME: !Ref BatchBucket
+          ICEBERG_BUCKET_NAME: !Ref IcebergBucket
+      Events:
+        S3PutObjectEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt LandingQueue.Arn
+            BatchSize: 1
+
+  MaintenanceArrivalEventProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'batch-uploader-${Name}-maintenance'
+      Handler: maintenance.handler
+      Timeout: 180
+      Runtime: python3.10
+      CodeUri: ./src
+      Policies: 
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}-maintenance*'
+            - Effect: Allow
+              Action: 
+                - s3:GetObject
+                - s3:PutObject
+                - s3:DeleteObject
+                - s3:ListBucket
+              Resource:
+                - !Sub 'arn:aws:s3:::${IcebergBucket}'
+                - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
+            - Effect: Allow
+              Action: 
+                - s3:GetBucketLocation
+                - s3:GetObject
+                - s3:ListBucket
+                - s3:ListBucketMultipartUploads
+                - s3:ListMultipartUploadParts
+                - s3:AbortMultipartUpload
+                - s3:CreateBucket
+                - s3:PutObject
+              Resource: 
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
+                - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
+            - Effect: Allow
+              Action: 
+                - athena:StartQueryExecution
+                - athena:StopQueryExecution
+                - athena:GetQueryExecution
+                - athena:GetDataCatalog
+              Resource:
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
+                - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
+            - Effect: Allow
+              Action: 
+                - glue:GetDatabase*
+                - glue:CreateTable
+                - glue:UpdateTable
+                - glue:GetTable
+                - glue:GetTables
+                - glue:DeleteTable
+                - glue:BatchDeleteTable
+                - glue:GetPartition*
+                - glue:BatchGetPartition
+              Resource:
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/${IcebergTableName}*'
+      Environment:
+        Variables:
+          ATHENA_TABLE: !Ref IcebergTableName
+          ATHENA_WORKGROUP: !Ref AthenaWorkGroup
+          ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
+      Events:
+        VacuumEvent:
+          Type: Schedule
+          Properties:
+            Name: !Sub 'batch-uploader-${Name}-maintenance-vacuum'
+            Schedule: rate(1 day) 
+        OptimizeEvent:
+          Type: Schedule
+          Properties:
+            Name: !Sub 'batch-uploader-${Name}-maintenance-optimize'
+            Schedule: rate(2 days)
+
+  GrafanaAssumeRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement: 
+          - Sid: "AWSManagedGrafanaCanAssumeThisRole"
+            Effect: Allow
+            Principal:
+              Service:
+                - "grafana.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+              ArnLike:
+                aws:SourceArn: 
+                  - !Sub 'arn:aws:grafana:${AWS::Region}:${AWS::AccountId}:/workspaces/*'
+      Path: "/"
+  
+  GrafanaAthenaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub 'batch-uploader-${Name}-athena-policy'
+      Roles:
+        - !Ref GrafanaAssumeRole
+      PolicyDocument: 
+        Version: 2012-10-17
+        Statement:
+          - Sid: "AllowGrafanaQueryOutputAthena"
+            Effect: Allow
+            Action: 
+              - s3:GetBucketLocation
+              - s3:GetObject
+              - s3:ListBucket
+              - s3:ListBucketMultipartUploads
+              - s3:ListMultipartUploadParts
+              - s3:AbortMultipartUpload
+              - s3:CreateBucket
+              - s3:PutObject
+            Resource: 
+              - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
+              - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
+          - Sid: "AllowIcebergData"
+            Effect: Allow
+            Action: 
+              - s3:GetObject
+              - s3:ListBucket
+            Resource: 
+              - !Sub 'arn:aws:s3:::${IcebergBucket}'
+              - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
+          - Sid: "AllowGrafanaToListAthena"
+            Effect: Allow
+            Action: 
+              - "athena:ListDataCatalogs"
+              - "athena:ListWorkGroups"
+            Resource: "*"
+          - Sid: "AllowGrafanaToGetAthenaDataCatalog"
+            Effect: Allow
+            Action: 
+              - "athena:GetDatabase"
+              - "athena:GetDataCatalog"
+              - "athena:GetTableMetadata"
+              - "athena:ListDatabases"
+              - "athena:ListTableMetadata"
+            Resource: 
+              - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/AwsDataCatalog'
+          - Sid: "AllowGrafanaToQueryAthena"
+            Effect: Allow
+            Action: 
+              - "athena:GetQueryExecution"
+              - "athena:GetQueryResults"
+              - "athena:GetWorkGroup"
+              - "athena:StartQueryExecution"
+              - "athena:StopQueryExecution"
+            Resource: 
+              - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/*'
+          - Sid: "AllowGrafanaToAccessGlue"
+            Effect: Allow
+            Action: 
+              - "glue:GetDatabase"
+              - "glue:GetDatabases"
+              - "glue:GetTable"
+              - "glue:GetTables"
+              - "glue:GetPartition"
+              - "glue:GetPartitions"
+              - "glue:GetTableVersion"
+              - "glue:GetTableVersions"
+            Resource: 
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/*'
+
+  GrafanaWorkspace:
+    Type: 'AWS::Grafana::Workspace'
+    Properties:
+      AccountAccessType: CURRENT_ACCOUNT
+      AuthenticationProviders:
+        - AWS_SSO
+      PermissionType: SERVICE_MANAGED
+      RoleArn: !GetAtt GrafanaAssumeRole.Arn
+      Name: !Sub 'batch-uploader-${Name}'
+      Description: !Sub 'batch-uploader-${Name}'
+
+Outputs:
+  LandingBucket:
+    Description: The S3 bucket where data can be uploaded for processing
+    Value: !Ref LandingBucket
+
+  AthenaOutputBucket:
+    Description: The S3 bucket where Athena query results should be stored
+    Value: !Ref AthenaOutputBucket
