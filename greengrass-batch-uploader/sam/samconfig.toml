@@ -1,4 +1,8 @@
 version = 0.1
+[default.global.parameters]
+stack_name = "greengrass-batch-uploader"
+region = "ap-southeast-2"
+
 [default.deploy.parameters]
 stack_name = "greengrass-batch-uploader"
 resolve_s3 = true
