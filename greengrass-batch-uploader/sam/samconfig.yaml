@@ -1,0 +1,18 @@
+version: 0.1
+default:
+  global:
+    parameters:
+      stack_name: greengrass-batch-uploader
+      region: ap-southeast-2
+  deploy:
+    parameters:
+      stack_name: greengrass-batch-uploader
+      resolve_s3: true
+      s3_prefix: greengrass-batch-uploader
+      region: ap-southeast-2
+      confirm_changeset: true
+      capabilities: CAPABILITY_IAM
+      parameter_overrides: 
+        Name=robocat-greengrass
+        IcebergTableName=greengrass_data_iceberg
+      image_repositories: []
