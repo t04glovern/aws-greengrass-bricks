@@ -6,7 +6,11 @@
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.10",
 	"features": {
 		"ghcr.io/devcontainers/features/aws-cli:1": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/java:1": {
+			"installMaven": true,
+			"version": "11"
+		}
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
