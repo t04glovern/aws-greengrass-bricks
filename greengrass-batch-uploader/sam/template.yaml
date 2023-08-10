@@ -7,6 +7,9 @@ Parameters:
     Type: String
   IcebergTableName:
     Type: String
+  DatabaseName:
+    Type: String
+    Default: 'default'
 
 Resources:
   AthenaWorkGroup:
@@ -98,7 +101,7 @@ Resources:
   LandingQueuePolicy:
     Type: AWS::SQS::QueuePolicy
     Properties:
-      Queues: 
+      Queues:
         - !Ref LandingQueue
       PolicyDocument:
         Version: '2012-10-17'
@@ -165,7 +168,7 @@ Resources:
       Timeout: 90
       Runtime: python3.10
       CodeUri: ./src
-      Policies: 
+      Policies:
         - Version: '2012-10-17'
           Statement:
             - Effect: Allow
@@ -175,22 +178,22 @@ Resources:
                 - logs:PutLogEvents
               Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}*'
             - Effect: Allow
-              Action: 
+              Action:
                 - s3:GetObject
               Resource: !Sub 'arn:aws:s3:::${LandingBucket}/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - s3:GetObject
                 - s3:PutObject
                 - s3:DeleteObject
                 - s3:ListBucket
-              Resource: 
+              Resource:
                 - !Sub 'arn:aws:s3:::${BatchBucket}'
                 - !Sub 'arn:aws:s3:::${BatchBucket}/*'
                 - !Sub 'arn:aws:s3:::${IcebergBucket}'
                 - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - s3:GetBucketLocation
                 - s3:GetObject
                 - s3:ListBucket
@@ -199,11 +202,11 @@ Resources:
                 - s3:AbortMultipartUpload
                 - s3:CreateBucket
                 - s3:PutObject
-              Resource: 
+              Resource:
                 - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
                 - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - athena:StartQueryExecution
                 - athena:StopQueryExecution
                 - athena:GetQueryExecution
@@ -212,7 +215,7 @@ Resources:
                 - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
                 - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - glue:GetDatabase*
                 - glue:CreateTable
                 - glue:UpdateTable
@@ -224,10 +227,11 @@ Resources:
                 - glue:BatchGetPartition
               Resource:
                 - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
-                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
-                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/${IcebergTableName}*'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/${DatabaseName}'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/${DatabaseName}/${IcebergTableName}*'
       Environment:
         Variables:
+          ATHENA_DATABASE: !Ref DatabaseName
           ATHENA_TABLE: !Ref IcebergTableName
           ATHENA_WORKGROUP: !Ref AthenaWorkGroup
           ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
@@ -248,7 +252,7 @@ Resources:
       Timeout: 180
       Runtime: python3.10
       CodeUri: ./src
-      Policies: 
+      Policies:
         - Version: '2012-10-17'
           Statement:
             - Effect: Allow
@@ -258,7 +262,7 @@ Resources:
                 - logs:PutLogEvents
               Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/batch-uploader-${Name}-maintenance*'
             - Effect: Allow
-              Action: 
+              Action:
                 - s3:GetObject
                 - s3:PutObject
                 - s3:DeleteObject
@@ -267,7 +271,7 @@ Resources:
                 - !Sub 'arn:aws:s3:::${IcebergBucket}'
                 - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - s3:GetBucketLocation
                 - s3:GetObject
                 - s3:ListBucket
@@ -276,11 +280,11 @@ Resources:
                 - s3:AbortMultipartUpload
                 - s3:CreateBucket
                 - s3:PutObject
-              Resource: 
+              Resource:
                 - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
                 - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - athena:StartQueryExecution
                 - athena:StopQueryExecution
                 - athena:GetQueryExecution
@@ -289,7 +293,7 @@ Resources:
                 - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
                 - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/*'
             - Effect: Allow
-              Action: 
+              Action:
                 - glue:GetDatabase*
                 - glue:CreateTable
                 - glue:UpdateTable
@@ -301,10 +305,11 @@ Resources:
                 - glue:BatchGetPartition
               Resource:
                 - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
-                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
-                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/${IcebergTableName}*'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/${DatabaseName}'
+                - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/${DatabaseName}/${IcebergTableName}*'
       Environment:
         Variables:
+          ATHENA_DATABASE: !Ref DatabaseName
           ATHENA_TABLE: !Ref IcebergTableName
           ATHENA_WORKGROUP: !Ref AthenaWorkGroup
           ATHENA_QUERY_OUTPUT_BUCKET: !Ref AthenaOutputBucket
@@ -313,7 +318,7 @@ Resources:
           Type: Schedule
           Properties:
             Name: !Sub 'batch-uploader-${Name}-maintenance-vacuum'
-            Schedule: rate(1 day) 
+            Schedule: rate(1 day)
         OptimizeEvent:
           Type: Schedule
           Properties:
@@ -322,37 +327,37 @@ Resources:
 
   GrafanaAssumeRole:
     Type: AWS::IAM::Role
-    Properties: 
-      AssumeRolePolicyDocument: 
+    Properties:
+      AssumeRolePolicyDocument:
         Version: 2012-10-17
-        Statement: 
+        Statement:
           - Sid: "AWSManagedGrafanaCanAssumeThisRole"
             Effect: Allow
             Principal:
               Service:
                 - "grafana.amazonaws.com"
-            Action: 
+            Action:
               - "sts:AssumeRole"
             Condition:
               StringEquals:
                 aws:SourceAccount: !Ref AWS::AccountId
               ArnLike:
-                aws:SourceArn: 
+                aws:SourceArn:
                   - !Sub 'arn:aws:grafana:${AWS::Region}:${AWS::AccountId}:/workspaces/*'
       Path: "/"
-  
+
   GrafanaAthenaPolicy:
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: !Sub 'batch-uploader-${Name}-athena-policy'
       Roles:
         - !Ref GrafanaAssumeRole
-      PolicyDocument: 
+      PolicyDocument:
         Version: 2012-10-17
         Statement:
           - Sid: "AllowGrafanaQueryOutputAthena"
             Effect: Allow
-            Action: 
+            Action:
               - s3:GetBucketLocation
               - s3:GetObject
               - s3:ListBucket
@@ -361,46 +366,46 @@ Resources:
               - s3:AbortMultipartUpload
               - s3:CreateBucket
               - s3:PutObject
-            Resource: 
+            Resource:
               - !Sub 'arn:aws:s3:::${AthenaOutputBucket}'
               - !Sub 'arn:aws:s3:::${AthenaOutputBucket}/*'
           - Sid: "AllowIcebergData"
             Effect: Allow
-            Action: 
+            Action:
               - s3:GetObject
               - s3:ListBucket
-            Resource: 
+            Resource:
               - !Sub 'arn:aws:s3:::${IcebergBucket}'
               - !Sub 'arn:aws:s3:::${IcebergBucket}/*'
           - Sid: "AllowGrafanaToListAthena"
             Effect: Allow
-            Action: 
+            Action:
               - "athena:ListDataCatalogs"
               - "athena:ListWorkGroups"
             Resource: "*"
           - Sid: "AllowGrafanaToGetAthenaDataCatalog"
             Effect: Allow
-            Action: 
+            Action:
               - "athena:GetDatabase"
               - "athena:GetDataCatalog"
               - "athena:GetTableMetadata"
               - "athena:ListDatabases"
               - "athena:ListTableMetadata"
-            Resource: 
+            Resource:
               - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:datacatalog/AwsDataCatalog'
           - Sid: "AllowGrafanaToQueryAthena"
             Effect: Allow
-            Action: 
+            Action:
               - "athena:GetQueryExecution"
               - "athena:GetQueryResults"
               - "athena:GetWorkGroup"
               - "athena:StartQueryExecution"
               - "athena:StopQueryExecution"
-            Resource: 
-              - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/*'
+            Resource:
+              - !Sub 'arn:aws:athena:${AWS::Region}:${AWS::AccountId}:workgroup/${AthenaWorkGroup}'
           - Sid: "AllowGrafanaToAccessGlue"
             Effect: Allow
-            Action: 
+            Action:
               - "glue:GetDatabase"
               - "glue:GetDatabases"
               - "glue:GetTable"
@@ -409,10 +414,10 @@ Resources:
               - "glue:GetPartitions"
               - "glue:GetTableVersion"
               - "glue:GetTableVersions"
-            Resource: 
+            Resource:
               - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog'
-              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/default'
-              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/default/*'
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/${DatabaseName}'
+              - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/${DatabaseName}/${IcebergTableName}*'
 
   GrafanaWorkspace:
     Type: 'AWS::Grafana::Workspace'

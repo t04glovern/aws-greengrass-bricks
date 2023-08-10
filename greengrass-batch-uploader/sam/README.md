@@ -13,5 +13,6 @@ sam build
 
 sam deploy --parameter-overrides \
     Name=robocat-greengrass \
-    IcebergTableName=greengrass_data_iceberg
+    IcebergTableName=greengrass_data_iceberg \
+    DatabaseName=default
 ```

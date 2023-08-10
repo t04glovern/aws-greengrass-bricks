@@ -15,4 +15,5 @@ default:
       parameter_overrides: 
         Name=robocat-greengrass
         IcebergTableName=greengrass_data_iceberg
+        DatabaseName=default
       image_repositories: []
