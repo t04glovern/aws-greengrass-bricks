@@ -51,7 +51,7 @@ configuration = {
             }
         },
         "com.devopstar.json.gzip": {
-            "componentVersion": "1.0.6",
+            "componentVersion": "1.0.9",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Processor": {
