@@ -51,20 +51,18 @@ configuration = {
             }
         },
         "com.devopstar.json.gzip": {
-            "componentVersion": "1.0.11",
+            "componentVersion": "1.0.13",
             "configurationUpdate": {
                 "merge": json.dumps({
+                    "Interval": "30",
+                    "Path": "/tmp/greengrass/gzip",
                     "Processor": {
                         "StreamName": "BatchMessageStream",
-                        "BatchSize": "100",
-                        "Interval": "10",
-                        "Path": "/tmp/greengrass/gzip"
+                        "BatchSize": "200"
                     },
                     "Uploader": {
                         "BucketName": "batch-uploader-robocat-greengrass-landing",
-                        "Prefix": "robocat",
-                        "Interval": "10",
-                        "Path": "/tmp/greengrass/gzip/*"
+                        "Prefix": "robocat"
                     },
                     "LogLevel": "INFO"
                 })
