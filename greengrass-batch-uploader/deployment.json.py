@@ -50,21 +50,14 @@ configuration = {
                 })
             }
         },
-        "com.devopstar.json.gzip": {
-            "componentVersion": "1.0.13",
+        "com.devopstar.S3Ingestor": {
+            "componentVersion": "1.0.0",
             "configurationUpdate": {
                 "merge": json.dumps({
-                    "Interval": "30",
-                    "Path": "/tmp/greengrass/gzip",
-                    "Processor": {
-                        "StreamName": "BatchMessageStream",
-                        "BatchSize": "200"
-                    },
                     "Uploader": {
                         "BucketName": "batch-uploader-robocat-greengrass-landing",
                         "Prefix": "robocat"
-                    },
-                    "LogLevel": "INFO"
+                    }
                 })
             },
             "runWith": {}
@@ -88,7 +81,7 @@ configuration = {
                                 "diskSpaceLimitUnit": "MB",
                                 "deleteLogFileAfterCloudUpload": "false"
                             },
-                            "com.devopstar.json.gzip": {
+                            "com.devopstar.S3Ingestor": {
                                 "minimumLogLevel": "INFO",
                                 "diskSpaceLimit": "20",
                                 "diskSpaceLimitUnit": "MB",
