@@ -51,7 +51,7 @@ configuration = {
             }
         },
         "com.devopstar.S3Ingestor": {
-            "componentVersion": "1.0.1",
+            "componentVersion": "1.0.2",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Uploader": {
