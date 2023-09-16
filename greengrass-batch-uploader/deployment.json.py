@@ -45,13 +45,13 @@ configuration = {
             "runWith": {},
             "configurationUpdate": {
                 "merge": json.dumps({
-                    "Enabled": "false",
-                    "Frequency": "1.0"
+                    "Enabled": "true",
+                    "Frequency": "0.1"
                 })
             }
         },
         "com.devopstar.S3Ingestor": {
-            "componentVersion": "1.0.0",
+            "componentVersion": "1.0.1",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "Uploader": {

@@ -8,4 +8,4 @@ zip-build/
 custom-build/
 
 # greengrass-batch-uploader
-greengrass-batch-uploader/aws-greengrass-json-gzip
+greengrass-batch-uploader/aws-greengrass-s3-ingestor
