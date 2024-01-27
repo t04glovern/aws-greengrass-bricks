@@ -16,7 +16,7 @@ on:
 env:
   GREENGRASS_COMPONENT_NAME: com.devopstar.Robocat
   GREENGRASS_REGION: ap-southeast-2
-  GREENGRASS_DEV_KIT_VERSION: v1.2.3
+  GREENGRASS_DEV_KIT_VERSION: v1.6.2
   working-directory: ./greengrass-batch-uploader
 
 jobs:
