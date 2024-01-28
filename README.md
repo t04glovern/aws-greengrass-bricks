@@ -8,6 +8,7 @@ This repository contains a set of good practices and examples when working with 
 * [02 - Using Github Actions for AWS IoT Greengrass v2 Continuous Deployment](https://devopstar.com/2022/09/22/github-actions-for-aws-iot-greengrass-v2-continuous-deployment)
 * [03 - Deploying Containers to AWS Greengrass v2 - A Comprehensive Guide](https://devopstar.com/2023/04/25/deploying-containers-to-aws-greengrass-v2-a-comprehensive-guide)
 * [04 - Small AWS Greengrass v2 tips for big observability gains](https://devopstar.com/2023/06/25/small-aws-greengrass-v2-tips-for-big-observability-gains)
+* [05 - S3 Batching - Drastically Simplifying Your IoT Architecture](https://devopstar.com/2024/01/28/s3-batching-drastically-simplifying-your-iot-architecture)
 
 ## Basic Setup
 

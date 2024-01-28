@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" pages="7">
     <diagram name="Edge" id="qp0VZCT2iei24g2Qt4Ns">
-        <mxGraphModel dx="1383" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1317" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -49,11 +49,55 @@
                 <mxCell id="cG--9ZA4ox1IjzQyI3pC-3" value="&lt;span style=&quot;text-align: left;&quot;&gt;robocat-&lt;b&gt;landing&lt;/b&gt;&lt;br&gt;(S3)&lt;br&gt;&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#60A337;gradientDirection=north;fillColor=#277116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;labelPosition=center;" parent="1" vertex="1">
                     <mxGeometry x="660" y="209" width="61" height="61" as="geometry"/>
                 </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-3" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="190" y="670" width="460" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="GFjk9zXJtuLrgqPfYVm3-12" target="GFjk9zXJtuLrgqPfYVm3-7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                        <mxPoint x="214.5999999999999" y="740" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-6" style="edgeStyle=none;html=1;startArrow=none;startFill=0;" parent="1" source="GFjk9zXJtuLrgqPfYVm3-7" target="GFjk9zXJtuLrgqPfYVm3-13" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="650" y="750" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-14" style="edgeStyle=none;html=1;fontColor=default;" parent="1" source="GFjk9zXJtuLrgqPfYVm3-7" target="GFjk9zXJtuLrgqPfYVm3-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-7" value="&lt;b&gt;Greengrass StreamManager&lt;/b&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_greengrass_stream_manager;labelPosition=center;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="720" width="78" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" parent="1" source="GFjk9zXJtuLrgqPfYVm3-9" target="GFjk9zXJtuLrgqPfYVm3-11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-9" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&lt;i&gt;Greengrass Component&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=middle;verticalAlign=middle;align=left;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_greengrass_component;labelPosition=right;spacingLeft=0;spacingRight=4;" parent="1" vertex="1">
+                    <mxGeometry x="449" y="820" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-10" value="&lt;div style=&quot;&quot;&gt;&lt;b style=&quot;background-color: initial;&quot;&gt;message(s)&lt;/b&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;: &amp;lt;JSON&amp;gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="264.5" y="770" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-11" value="/tmp/greengrass/gzip/&lt;b&gt;batch_&amp;lt;x&amp;gt;.jsonl.gzip&lt;/b&gt;" style="image;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/azure2/general/Folder_Blank.svg;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="822" width="69" height="56.00000000000001" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-12" value="" style="shape=mxgraph.cisco.misc.page_icon;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;labelBackgroundColor=none;comic=1;" parent="1" vertex="1">
+                    <mxGeometry x="314.5" y="730" width="30" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-13" value="&lt;span style=&quot;text-align: left;&quot;&gt;robocat&lt;/span&gt;&lt;span style=&quot;text-align: left;&quot;&gt;-&lt;b&gt;landing&lt;/b&gt;&lt;br&gt;(S3)&lt;br&gt;&lt;/span&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#60A337;gradientDirection=north;fillColor=#277116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;labelPosition=center;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="719" width="61" height="61" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-16" style="edgeStyle=none;html=1;fontColor=default;" parent="1" source="GFjk9zXJtuLrgqPfYVm3-15" target="GFjk9zXJtuLrgqPfYVm3-12" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="GFjk9zXJtuLrgqPfYVm3-15" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.iot_thing_vibration_sensor;labelBackgroundColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="209" y="724.5" width="50" height="50" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
     <diagram id="2pAhftfALCLMm9PAy9kY" name="Stream Manager Breakdown">
-        <mxGraphModel dx="1383" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1463" dy="1038" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -83,10 +127,10 @@
                 <mxCell id="61dnPo2A-xLOSZnkA18B-7" style="edgeStyle=none;html=1;" parent="1" source="61dnPo2A-xLOSZnkA18B-6" target="37Har65xr3BZg1we1Dzs-2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="pFNwkFzjJF8bcbgcVFaB-6" value="" style="group;labelBackgroundColor=none;" parent="1" vertex="1" connectable="0">
+                <mxCell id="pFNwkFzjJF8bcbgcVFaB-6" value="" style="group;labelBackgroundColor=none;fontColor=default;fillColor=none;" parent="1" vertex="1" connectable="0">
                     <mxGeometry x="570.3399999999999" y="560" width="110.88999999999999" height="90" as="geometry"/>
                 </mxCell>
-                <mxCell id="61dnPo2A-xLOSZnkA18B-12" value="&lt;span style=&quot;border-color: var(--border-color); text-align: left;&quot;&gt;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;/tmp/greengrass/gzip/&lt;/span&gt;batch_1.jsonl.gzip&lt;/span&gt;" style="aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/azure2/general/Folder_Blank.svg;" parent="pFNwkFzjJF8bcbgcVFaB-6" vertex="1">
+                <mxCell id="61dnPo2A-xLOSZnkA18B-12" value="" style="aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/azure2/general/Folder_Blank.svg;" parent="pFNwkFzjJF8bcbgcVFaB-6" vertex="1">
                     <mxGeometry width="110.89" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="61dnPo2A-xLOSZnkA18B-8" value="" style="shape=mxgraph.cisco.misc.page_icon;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;labelBackgroundColor=none;comic=1;" parent="pFNwkFzjJF8bcbgcVFaB-6" vertex="1">
@@ -169,7 +213,7 @@
                 <mxCell id="0qsEfNm5jAaiu-kFmffQ-38" value="" style="group" parent="1" vertex="1" connectable="0">
                     <mxGeometry x="190" y="962" width="120" height="115" as="geometry"/>
                 </mxCell>
-                <mxCell id="hS4z0sYq7-Tfb4Lpszh5-1" value="&lt;span style=&quot;text-align: left; background-color: rgb(255, 255, 255);&quot;&gt;/tmp/greengrass/gzip/*&lt;/span&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.folder;" parent="0qsEfNm5jAaiu-kFmffQ-38" vertex="1">
+                <mxCell id="hS4z0sYq7-Tfb4Lpszh5-1" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.folder;" parent="0qsEfNm5jAaiu-kFmffQ-38" vertex="1">
                     <mxGeometry width="120" height="115" as="geometry"/>
                 </mxCell>
                 <mxCell id="pFNwkFzjJF8bcbgcVFaB-19" value="" style="group" parent="0qsEfNm5jAaiu-kFmffQ-38" vertex="1" connectable="0">
@@ -253,7 +297,7 @@
                 <mxCell id="0qsEfNm5jAaiu-kFmffQ-47" value="" style="group" parent="1" vertex="1" connectable="0">
                     <mxGeometry x="590.34" y="1448" width="120" height="115" as="geometry"/>
                 </mxCell>
-                <mxCell id="0qsEfNm5jAaiu-kFmffQ-11" value="&lt;span style=&quot;text-align: left; background-color: rgb(255, 255, 255);&quot;&gt;&lt;b&gt;/tmp/greengrass/gzip/&lt;/b&gt;*&lt;/span&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.folder;" parent="0qsEfNm5jAaiu-kFmffQ-47" vertex="1">
+                <mxCell id="0qsEfNm5jAaiu-kFmffQ-11" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.folder;" parent="0qsEfNm5jAaiu-kFmffQ-47" vertex="1">
                     <mxGeometry width="120" height="115" as="geometry"/>
                 </mxCell>
                 <mxCell id="0qsEfNm5jAaiu-kFmffQ-12" value="" style="group" parent="0qsEfNm5jAaiu-kFmffQ-47" vertex="1" connectable="0">
@@ -364,14 +408,23 @@
                 <mxCell id="Br72W4DXOy4dn-GcDtpM-2" value="&lt;div style=&quot;line-height: 100%; font-size: 14px; font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace;&quot;&gt;&lt;div style=&quot;line-height: 100%;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;SELECT * &lt;span style=&quot;color: rgb(0, 0, 255);&quot;&gt;FROM&lt;/span&gt; &lt;span style=&quot;color: rgb(163, 21, 21);&quot;&gt;&quot;default&quot;&lt;/span&gt;.&lt;span style=&quot;color: rgb(163, 21, 21);&quot;&gt;&quot;greengrass_json_data&quot;&lt;/span&gt; &lt;span style=&quot;color: rgb(0, 0, 255);&quot;&gt;limit&lt;/span&gt; &lt;span style=&quot;color: rgb(9, 134, 88);&quot;&gt;10&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;align=left;spacingLeft=10;comic=1;" parent="1" vertex="1">
                     <mxGeometry x="1620" y="1230" width="450" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="4pJrg7yd5PzuD5j3n4V1-1" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 100%;&quot;&gt;&lt;div style=&quot;line-height: 100%;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;CREATE&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;EXTERNAL&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;TABLE&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;IF&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;NOT&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;EXISTS&lt;/span&gt; greengrass_data (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`id`&lt;/span&gt; string,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`timestamp`&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;timestamp&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`speed`&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`temperature`&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;float&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`location`&lt;/span&gt; struct &amp;lt; lat: &lt;span style=&quot;color: #0000ff;&quot;&gt;float&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; lng: &lt;span style=&quot;color: #0000ff;&quot;&gt;float&lt;/span&gt; &amp;gt;&lt;/div&gt;&lt;div&gt;)&lt;/div&gt;&lt;div&gt;&lt;b&gt;PARTITIONED &lt;span style=&quot;color: #0000ff;&quot;&gt;BY&lt;/span&gt; (&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;year&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;month&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;day&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;hour&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;)&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;ROW&lt;/span&gt; FORMAT SERDE &lt;span style=&quot;color: #a31515;&quot;&gt;'org.apache.hive.hcatalog.data.&lt;b&gt;JsonSerDe&lt;/b&gt;'&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;WITH&lt;/span&gt; SERDEPROPERTIES (&amp;nbsp;&lt;span style=&quot;background-color: initial; color: rgb(163, 21, 21);&quot;&gt;&quot;timestamp.formats&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;background-color: initial; color: rgb(163, 21, 21);&quot;&gt;&quot;&lt;b&gt;yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZ&lt;/b&gt;&quot;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;LOCATION&lt;/span&gt; &lt;span style=&quot;color: #a31515;&quot;&gt;'&lt;b&gt;s3://batch-uploader-robocat-greengrass-landing/robocat/&lt;/b&gt;'&lt;/span&gt;&lt;/div&gt;&lt;div&gt;TBLPROPERTIES (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.enabled&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;true&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.year.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.year.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2023,2033&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.month.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.month.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;1,12&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.month.digits&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.day.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.day.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;1,31&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.day.digits&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.hour.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.hour.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;0,23&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.hour.digits&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;storage.location.template&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;&lt;b&gt;s3://batch-uploader-robocat-greengrass-landing/robocat/year=${year}/month=${month}/day=${day}/hour=${hour}&lt;/b&gt;&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;align=left;spacingLeft=10;comic=1;labelBackgroundColor=none;" vertex="1" parent="1">
+                <mxCell id="4pJrg7yd5PzuD5j3n4V1-1" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 100%;&quot;&gt;&lt;div style=&quot;line-height: 100%;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;CREATE&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;EXTERNAL&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;TABLE&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;IF&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;NOT&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;EXISTS&lt;/span&gt; greengrass_data (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`id`&lt;/span&gt; string,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`timestamp`&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;timestamp&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`speed`&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`temperature`&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;float&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;`location`&lt;/span&gt; struct &amp;lt; lat: &lt;span style=&quot;color: #0000ff;&quot;&gt;float&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; lng: &lt;span style=&quot;color: #0000ff;&quot;&gt;float&lt;/span&gt; &amp;gt;&lt;/div&gt;&lt;div&gt;)&lt;/div&gt;&lt;div&gt;&lt;b&gt;PARTITIONED &lt;span style=&quot;color: #0000ff;&quot;&gt;BY&lt;/span&gt; (&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;year&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;month&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;day&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;,&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #0000ff;&quot;&gt;hour&lt;/span&gt; &lt;span style=&quot;color: #0000ff;&quot;&gt;int&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;)&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;ROW&lt;/span&gt; FORMAT SERDE &lt;span style=&quot;color: #a31515;&quot;&gt;'org.apache.hive.hcatalog.data.&lt;b&gt;JsonSerDe&lt;/b&gt;'&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;WITH&lt;/span&gt; SERDEPROPERTIES (&amp;nbsp;&lt;span style=&quot;background-color: initial; color: rgb(163, 21, 21);&quot;&gt;&quot;timestamp.formats&quot;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;=&lt;/span&gt;&lt;span style=&quot;background-color: initial; color: rgb(163, 21, 21);&quot;&gt;&quot;&lt;b&gt;yyyy-MM-dd'T'HH:mm:ss.SSSSSSZZ&lt;/b&gt;&quot;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: #0000ff;&quot;&gt;LOCATION&lt;/span&gt; &lt;span style=&quot;color: #a31515;&quot;&gt;'&lt;b&gt;s3://batch-uploader-robocat-greengrass-landing/robocat/&lt;/b&gt;'&lt;/span&gt;&lt;/div&gt;&lt;div&gt;TBLPROPERTIES (&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.enabled&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;true&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.year.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.year.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2023,2033&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.month.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.month.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;1,12&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.month.digits&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.day.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.day.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;1,31&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.day.digits&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.hour.type&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;integer&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.hour.range&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;0,23&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;projection.hour.digits&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;storage.location.template&quot;&lt;/span&gt; = &lt;span style=&quot;color: #a31515;&quot;&gt;&quot;&lt;b&gt;s3://batch-uploader-robocat-greengrass-landing/robocat/year=${year}/month=${month}/day=${day}/hour=${hour}&lt;/b&gt;&quot;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;);&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;align=left;spacingLeft=10;comic=1;labelBackgroundColor=none;" parent="1" vertex="1">
                     <mxGeometry x="965" y="660" width="619.5" height="640" as="geometry"/>
+                </mxCell>
+                <mxCell id="oe8ElCZvXahdUhkcVRvr-2" value="&lt;span style=&quot;border-color: var(--border-color); text-align: left;&quot;&gt;/tmp/greengrass/gzip/&lt;/span&gt;&lt;span style=&quot;border-color: var(--border-color); text-align: left;&quot;&gt;batch_1.jsonl.gzip&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="520.34" y="650" width="230" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="oe8ElCZvXahdUhkcVRvr-3" value="&lt;span style=&quot;text-align: left;&quot;&gt;/tmp/greengrass/gzip/*&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=default;labelBackgroundColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="180" y="1075" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="oe8ElCZvXahdUhkcVRvr-4" value="&lt;b style=&quot;border-color: var(--border-color); text-align: left;&quot;&gt;/tmp/greengrass/gzip/&lt;/b&gt;&lt;span style=&quot;text-align: left; background-color: rgb(255, 255, 255);&quot;&gt;*&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="575.34" y="1563" width="150" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
     <diagram id="-Da3nlt2lAYtzhYnRrwG" name="Cloud Overview">
-        <mxGraphModel dx="1383" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1317" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -520,7 +573,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="LpOoI9qmRG4u_zcOEN7-" name="Cloud Event Breakdown">
-        <mxGraphModel dx="1383" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1317" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -691,7 +744,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="PxCSrcpwF7RW81sQeaRL" name="Cloud Lambda Breakdown">
-        <mxGraphModel dx="533" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="467" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -877,7 +930,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="-9oVZoiEufqEfewc3Obh" name="Generic IoT Architecture">
-        <mxGraphModel dx="1383" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1317" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -1086,7 +1139,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="04u2YzfukZPs_Y1mQBgs" name="References">
-        <mxGraphModel dx="1383" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1317" dy="934" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -1212,10 +1265,10 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-15" value="S3" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" parent="1" vertex="1">
-                    <mxGeometry x="448.05000000000007" y="890" width="48.08" height="50" as="geometry"/>
+                    <mxGeometry x="352.13000000000005" y="860" width="48.08" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-52" value="" style="group" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="273.59000000000003" y="850" width="126" height="134" as="geometry"/>
+                    <mxGeometry x="177.67000000000002" y="820" width="126" height="134" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-16" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document;fontSize=9;" parent="QzyzsJ-h-4oCdJLid6f8-52" vertex="1">
                     <mxGeometry x="26" width="20" height="30" as="geometry"/>
@@ -1326,10 +1379,10 @@
                     <mxGeometry x="80" y="104" width="20" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-55" value="S3" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3F8624;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;" parent="1" vertex="1">
-                    <mxGeometry x="454.96000000000004" y="1081.5" width="48.08" height="50" as="geometry"/>
+                    <mxGeometry x="442.96" y="987.5" width="48.08" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-56" value="" style="group" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="189.67000000000002" y="1030" width="126" height="134" as="geometry"/>
+                    <mxGeometry x="177.67000000000002" y="936" width="126" height="134" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-57" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document;fontSize=9;" parent="QzyzsJ-h-4oCdJLid6f8-56" vertex="1">
                     <mxGeometry x="26" width="20" height="30" as="geometry"/>
@@ -1441,20 +1494,20 @@
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-94" style="edgeStyle=none;html=1;fontSize=9;startArrow=classic;startFill=1;endArrow=none;endFill=0;" parent="1" source="QzyzsJ-h-4oCdJLid6f8-93" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="309.96000000000004" y="1106.5" as="targetPoint"/>
+                        <mxPoint x="297.96" y="1012.5" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-95" style="edgeStyle=none;html=1;fontSize=9;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="1" source="QzyzsJ-h-4oCdJLid6f8-93" target="QzyzsJ-h-4oCdJLid6f8-55" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-93" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.folder_open;fontSize=9;" parent="1" vertex="1">
-                    <mxGeometry x="365.16999999999996" y="1091" width="34.79" height="31" as="geometry"/>
+                    <mxGeometry x="353.1699999999999" y="997" width="34.79" height="31" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-97" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.tick;fontSize=9;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
-                    <mxGeometry x="512.8399999999999" y="1072" width="40" height="50" as="geometry"/>
+                    <mxGeometry x="500.83999999999986" y="978" width="40" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="QzyzsJ-h-4oCdJLid6f8-99" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fontSize=9;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-                    <mxGeometry x="512.84" y="893.5" width="40" height="43" as="geometry"/>
+                    <mxGeometry x="416.92" y="863.5" width="40" height="43" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
