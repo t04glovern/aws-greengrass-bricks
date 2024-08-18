@@ -95,13 +95,13 @@ configuration = {
             "runWith": {}
         },
         "aws.greengrass.Nucleus": {
-            "componentVersion": "2.12.0"
+            "componentVersion": "2.12.6"
         },
         "aws.greengrass.Cli": {
-            "componentVersion": "2.12.0"
+            "componentVersion": "2.12.6"
         },
         "aws.greengrass.LocalDebugConsole": {
-            "componentVersion": "2.4.1",
+            "componentVersion": "2.4.2",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "httpsEnabled": "false"
