@@ -63,7 +63,7 @@ configuration = {
             "runWith": {}
         },
         "aws.greengrass.LogManager": {
-            "componentVersion": "2.3.7",
+            "componentVersion": "2.3.11",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "logsUploaderConfiguration": {
@@ -95,13 +95,13 @@ configuration = {
             "runWith": {}
         },
         "aws.greengrass.Nucleus": {
-            "componentVersion": "2.12.6"
+            "componentVersion": "2.16.0"
         },
         "aws.greengrass.Cli": {
-            "componentVersion": "2.12.6"
+            "componentVersion": "2.16.0"
         },
         "aws.greengrass.LocalDebugConsole": {
-            "componentVersion": "2.4.2",
+            "componentVersion": "2.4.6",
             "configurationUpdate": {
                 "merge": json.dumps({
                     "httpsEnabled": "false"
